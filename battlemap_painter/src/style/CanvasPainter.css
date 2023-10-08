@@ -1,0 +1,10 @@
+canvas{
+    border: 1px solid blue;
+}
+.canvasContianer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Takes full height of the view port */
+}
