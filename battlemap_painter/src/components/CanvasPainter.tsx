@@ -3,8 +3,13 @@ import p5 from "p5";
 import "../style/CanvasPainter.css";
 import dirt01 from "../assets/dirt01.png";
 import dirt02 from '../assets/dirt02.png'
+
 import grass01 from "../assets/grass01.png";
+
 import tree01 from "../assets/tree01.png";
+import tree02 from "../assets/tree02.png";
+import tree03 from "../assets/tree03.png";
+
 import dirtPath01 from "../assets/dirtPath01.png";
 
 interface Props {
@@ -24,13 +29,17 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     const sketch = (p: p5) => {
       let dirtImg: p5.Image;
       let grassImg: p5.Image;
-      let treeImg: p5.Image;
+      let treeImg01: p5.Image;
+      let treeImg02: p5.Image;
+      let treeImg03: p5.Image;
       let dirtPathImg: p5.Image;
 
       p.preload = () => {
         dirtImg = p.loadImage(dirt02);
         grassImg = p.loadImage(grass01);
-        treeImg = p.loadImage(tree01);
+        treeImg01 = p.loadImage(tree01);
+        treeImg02 = p.loadImage(tree02);
+        treeImg03 = p.loadImage(tree03);
         dirtPathImg = p.loadImage(dirtPath01);
       };
 
@@ -98,23 +107,24 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           }
         }
 
+        const trees = [treeImg01, treeImg02, treeImg03];
         // Draw all trees
         for (let y = 0; y < p.height; y += tileSize) {
-          for (let x = 0; x < p.width; x += tileSize) {
-            if (Math.random() < 0.01) {
-              // 10% chance to draw a tree on a tile
-              const treeScale = 0.01 + Math.random(); // Random scale between 0.5 and 2
-              const treeRotation = Math.floor(Math.random() * 4) * 90; // Random rotation
-
-              p.push();
-              p.translate(x + tileSize / 2, y + tileSize / 2);
-              p.scale(treeScale);
-              p.rotate(p.radians(treeRotation));
-              p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);
-              p.pop();
+            for (let x = 0; x < p.width; x += tileSize) {
+              if (Math.random() < 0.1) {  // Adjusted to 10% for more trees, change as needed
+                const treeImg = p.random(trees);  // Choose a random tree image from the array
+                const treeScale = 0.5 + Math.random() * 1.5;  // Random scale between 0.5 and 2
+                const treeRotation = Math.floor(Math.random() * 4) * 90;  // Random rotation
+  
+                p.push();
+                p.translate(x + tileSize / 2, y + tileSize / 2);
+                p.scale(treeScale);
+                p.rotate(p.radians(treeRotation));
+                p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);  // Changed to use the random tree image
+                p.pop();
+              }
             }
           }
-        }
       };
     };
 
