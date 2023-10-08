@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 import p5 from "p5";
 import "../style/CanvasPainter.css";
 import dirt01 from "../assets/dirt01.png";
+import dirt02 from '../assets/dirt02.png'
 import grass01 from "../assets/grass01.png";
 import tree01 from "../assets/tree01.png";
 import dirtPath01 from "../assets/dirtPath01.png";
@@ -27,7 +28,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       let dirtPathImg: p5.Image;
 
       p.preload = () => {
-        dirtImg = p.loadImage(dirt01);
+        dirtImg = p.loadImage(dirt02);
         grassImg = p.loadImage(grass01);
         treeImg = p.loadImage(tree01);
         dirtPathImg = p.loadImage(dirtPath01);
@@ -57,7 +58,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
             p.rotate(p.radians(rotation));
             if (noiseValue > 0.5) {
               p.image(
-                grassImg,
+                dirtImg,
                 -tileSize / 2,
                 -tileSize / 2,
                 tileSize,
@@ -65,7 +66,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
               );
             } else {
               p.image(
-                grassImg,
+                dirtImg,
                 -tileSize / 2,
                 -tileSize / 2,
                 tileSize,
