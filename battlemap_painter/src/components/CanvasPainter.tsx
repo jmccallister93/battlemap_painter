@@ -9,18 +9,24 @@ import dirt04 from "../assets/dirt04.png";
 import dirt05 from "../assets/dirt05.jpg";
 import dirt06 from "../assets/dirt06.jpg";
 
-import grass01 from "../assets/grass01.jpg";
-import grass02 from "../assets/grass02.jpg";
-import grass03 from "../assets/grass03.jpg";
-import grass04 from "../assets/grass04.jpg";
-import grass05 from "../assets/grass05.jpg"
-import grass06 from "../assets/grass06.jpg"
-import grass07 from "../assets/grass07.jpeg"
-import grass08 from "../assets/grass08.png"
-import grass09 from "../assets/grass09.jpg"
-import grass11 from "../assets/grass11.jpg"
+import grass01 from "../assets/grassTiles/grass01.jpg";
+import grass02 from "../assets/grassTiles/grass02.jpg";
+import grass03 from "../assets/grassTiles/grass03.jpg";
+import grass04 from "../assets/grassTiles/grass04.jpg";
+import grass05 from "../assets/grassTiles/grass05.jpg";
+import grass06 from "../assets/grassTiles/grass06.jpg";
+import grass07 from "../assets/grassTiles/grass07.jpg";
+import grass08 from "../assets/grassTiles/grass08.jpg";
 
-import sand01 from "../assets/sand.png"
+import jungle01 from "../assets/jungleTiles/jungle01.jpg";
+import jungle02 from "../assets/jungleTiles/jungle02.jpg";
+import jungle03 from "../assets/jungleTiles/jungle03.jpg";
+import jungle04 from "../assets/jungleTiles/jungle04.jpg";
+import jungle05 from "../assets/jungleTiles/jungle05.jpg";
+import jungle06 from "../assets/jungleTiles/jungle06.jpg";
+import jungle07 from "../assets/jungleTiles/jungle07.jpg";
+
+import sand01 from "../assets/sand.png";
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -41,19 +47,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
   const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("forest");
+  const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(
+    null
+  ); // Store the index instead of value
 
   const rerender = () => {
     setSeed(Math.random() * 1000); // Update the seed to trigger a re-render with new noise
   };
 
+  const grassTilesImages: p5.Image[] = [];
+
   useEffect(() => {
     const sketch = (p: p5) => {
-      let dirtImg01: p5.Image;
-      let dirtImg03: p5.Image;
-      let dirtImg04: p5.Image;
-      let dirtImg05: p5.Image;
-      let dirtImg06: p5.Image;
-
       let sandImg01: p5.Image;
 
       let grassImg01: p5.Image;
@@ -64,8 +69,6 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       let grassImg06: p5.Image;
       let grassImg07: p5.Image;
       let grassImg08: p5.Image;
-      let grassImg09: p5.Image;
-      let grassImg11: p5.Image;
 
       let treeImg01: p5.Image;
       let treeImg02: p5.Image;
@@ -77,24 +80,17 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
 
       //   Preload images
       p.preload = () => {
-        dirtImg01 = p.loadImage(dirt01);
-        dirtImg03 = p.loadImage(dirt03);
-        dirtImg04 = p.loadImage(dirt04);
-        dirtImg05 = p.loadImage(dirt05);
-        dirtImg06 = p.loadImage(dirt06);
-
         sandImg01 = p.loadImage(sand01);
 
-        grassImg01 = p.loadImage(grass01);
-        grassImg02 = p.loadImage(grass02);
-        grassImg03 = p.loadImage(grass03);
-        grassImg04 = p.loadImage(grass04);
-        grassImg05 = p.loadImage(grass05);
-        grassImg06 = p.loadImage(grass06);
-        grassImg07 = p.loadImage(grass07);
-        grassImg08 = p.loadImage(grass08);
-        grassImg09 = p.loadImage(grass09);
-        grassImg11 = p.loadImage(grass11);
+        // Populate the mapping object
+        grassTilesImages[0] = p.loadImage(grass01);
+        grassTilesImages[1] = p.loadImage(grass02);
+        grassTilesImages[2] = p.loadImage(grass03);
+        grassTilesImages[3] = p.loadImage(grass04);
+        grassTilesImages[4] = p.loadImage(grass05);
+        grassTilesImages[5] = p.loadImage(grass06);
+        grassTilesImages[6] = p.loadImage(grass07);
+        grassTilesImages[7] = p.loadImage(grass08);
 
         treeImg01 = p.loadImage(tree01);
         treeImg02 = p.loadImage(tree02);
@@ -124,27 +120,44 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       // Draw everything
       p.draw = () => {
         p.background(255);
-        // Draw tiles
+
+        // Determine the tile to use for this render
+        let tile;
+        const grassTiles = [
+          grassImg01,
+          grassImg02,
+          grassImg03,
+          grassImg04,
+          grassImg05,
+          grassImg06,
+          grassImg07,
+          grassImg08,
+        ];
+
+        if (theme === "forest") {
+            if (selectedTileIndex !== null) {
+                tile = grassTilesImages[selectedTileIndex]; // Use the index to get the tile
+            } else {
+                tile = p.random(grassTilesImages);
+            }
+        }
+        // else if (theme === "desert") {
+        //   tile = sandImg01;
+        // }
+        if (!tile) {
+          console.error("Tile is undefined");
+          return; // If tile is still undefined for some reason, log an error and return to avoid further errors
+        }
+
         for (let y = 0; y < p.height; y += imgSize) {
           for (let x = 0; x < p.width; x += imgSize) {
-            const noiseValue = p.noise(x * 0.05, y * 0.05);
-            const rotation = Math.floor(Math.random() * 4) * 90;
-
             p.push();
             p.translate(x + imgSize / 2, y + imgSize / 2);
-            // p.rotate(p.radians(rotation));
-
-            if (theme === "forest") {
-                p.image(grassImg11, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
-              } else if (theme === "desert") {
-                p.image(sandImg01, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
-              }
-
+            p.image(tile, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
             p.pop();
           }
         }
-        const pathSize = tileSize * 0.5; // Adjust as needed to make the path smaller
-        const treeSize = tileSize * 0.5; // Adjust as needed to make the trees smaller
+
         // Draw path tiles over the base tiles
         if (showPath) {
           if (isHorizontalPath) {
@@ -200,8 +213,32 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     };
 
     const myp5 = new p5(sketch, canvasRef.current);
-    return () => myp5.remove();
-  }, [width, height, seed]); // Add seed as a dependency
+    return () => {
+        console.log('Removing p5 sketch');
+        myp5.remove(); // Ensure the p5 sketch is removed upon component unmount or re-render
+      };
+  }, [width, height, seed, showTrees, showPath, theme, selectedTileIndex, grassTilesImages]); // Add seed as a dependency
+
+  const grassTiles = [
+    { label: "Grass 01", value: grass01 },
+    { label: "Grass 02", value: grass02 },
+    { label: "Grass 03", value: grass03 },
+    { label: "Grass 04", value: grass04 },
+    { label: "Grass 05", value: grass05 },
+    { label: "Grass 06", value: grass06 },
+    { label: "Grass 07", value: grass07 },
+    { label: "Grass 08", value: grass08 },
+  ];
+
+  const getTileOptions = () => {
+    if (theme === "forest") {
+      return grassTiles;
+    }
+    // Add more conditions for other themes with their respective tiles
+    return [];
+  };
+
+  const tileOptions = getTileOptions();
 
   return (
     <div className="canvasWrapper">
@@ -209,13 +246,43 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         <button onClick={rerender}>Rerender Sketch</button>{" "}
         {/* New dropdown for theme selection */}
         <label>
-          Theme: 
+          Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
             <option value="forest">Forest</option>
             <option value="desert">Desert</option>
             {/* Add more options as needed */}
           </select>
         </label>
+        {tileOptions.length > 0 && (
+          <>
+            <label>
+              Tile:
+              <select
+                value={selectedTileIndex !== null ? selectedTileIndex : ""}
+                onChange={(e) =>
+                  setSelectedTileIndex(
+                    e.target.value ? parseInt(e.target.value) : null
+                  )
+                }
+              >
+                <option value="">Random</option>
+                {grassTiles.map((option, index) => (
+                  <option key={option.value} value={index}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {/* Display selected tile image */}
+            {/* {selectedTileIndex && (
+              <img
+                src={selectedTileIndex}
+                alt="Selected tile"
+                style={{ width: "50px", height: "auto" }}
+              />
+            )} */}
+          </>
+        )}
         <label>
           <input
             type="checkbox"
