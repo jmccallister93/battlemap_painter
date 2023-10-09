@@ -2,12 +2,13 @@ import React, { useRef, useEffect, useState } from "react";
 import p5 from "p5";
 import "../style/CanvasPainter.css";
 
-import dirt01 from "../assets/dirt01.png";
-import dirt02 from "../assets/dirt02.png";
-import dirt03 from "../assets/dirt03.png";
-import dirt04 from "../assets/dirt04.png";
-import dirt05 from "../assets/dirt05.jpg";
-import dirt06 from "../assets/dirt06.jpg";
+import concreate01 from "../assets/concreateTiles/concreate01.jpg";
+import concreate02 from "../assets/concreateTiles/concreate02.jpg";
+import concreate03 from "../assets/concreateTiles/concreate03.jpg";
+import concreate04 from "../assets/concreateTiles/concreate04.jpg";
+import concreate05 from "../assets/concreateTiles/concreate05.jpg";
+import concreate06 from "../assets/concreateTiles/concreate06.jpg";
+import concreate07 from "../assets/concreateTiles/concreate07.jpg";
 
 import grass01 from "../assets/grassTiles/grass01.jpg";
 import grass02 from "../assets/grassTiles/grass02.jpg";
@@ -55,6 +56,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     setSeed(Math.random() * 1000); // Update the seed to trigger a re-render with new noise
   };
 
+  const concreateTilesImages: p5.Image[] = [];
   const grassTilesImages: p5.Image[] = [];
   const mossTilesImages: p5.Image[] = [];
 
@@ -73,6 +75,15 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       //   Preload images
       p.preload = () => {
         sandImg01 = p.loadImage(sand01);
+
+        // Populate the concreate mapping object
+        concreateTilesImages[0] = p.loadImage(concreate01);
+        concreateTilesImages[1] = p.loadImage(concreate02);
+        concreateTilesImages[2] = p.loadImage(concreate03);
+        concreateTilesImages[3] = p.loadImage(concreate04);
+        concreateTilesImages[4] = p.loadImage(concreate05);
+        concreateTilesImages[5] = p.loadImage(concreate06);
+        concreateTilesImages[6] = p.loadImage(concreate07);
 
         // Populate the grass mapping object
         grassTilesImages[0] = p.loadImage(grass01);
@@ -124,8 +135,13 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
 
         // Determine the tile to use for this render
         let tile;
-
-        if (theme === "grass") {
+        if (theme === "concreate") {
+          if (selectedTileIndex !== null) {
+            tile = concreateTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(concreateTilesImages);
+          }
+        } else if (theme === "grass") {
           if (selectedTileIndex !== null) {
             tile = grassTilesImages[selectedTileIndex]; // Use the index to get the tile
           } else {
@@ -223,7 +239,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     selectedTileIndex,
     grassTilesImages,
     mossTilesImages,
-  ]); // Add seed as a dependency
+    concreateTilesImages,
+  ]);
+
+  const concreateTiles = [
+    { label: "Concreate 01", value: concreate01 },
+    { label: "Concreate 02", value: concreate02 },
+    { label: "Concreate 03", value: concreate03 },
+    { label: "Concreate 04", value: concreate04 },
+    { label: "Concreate 05", value: concreate05 },
+    { label: "Concreate 06", value: concreate06 },
+    { label: "Concreate 07", value: concreate07 },
+  ];
 
   const grassTiles = [
     { label: "Grass 01", value: grass01 },
@@ -247,7 +274,9 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   ];
 
   const getTileOptions = () => {
-    if (theme === "grass") {
+    if (theme === "concreate") {
+      return concreateTiles;
+    } else if (theme === "grass") {
       return grassTiles;
     } else if (theme === "moss") {
       return mossTiles;
@@ -270,7 +299,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         <label>
           Tile Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-            <option value="concreate">Concreate</option>   
+            <option value="concreate">Concreate</option>
             <option value="dirt">Dirt</option>
             <option value="gravel">Gravel</option>
             <option value="grass">Grass</option>
