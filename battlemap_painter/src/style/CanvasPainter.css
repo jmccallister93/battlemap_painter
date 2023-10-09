@@ -1,6 +1,22 @@
 canvas{
     border: 1px solid blue;
 }
+.canvasWrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.optionsContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    background: rgb(208, 207, 207);
+    padding: 1rem;
+    margin: 1rem;
+}
 .canvasContianer {
     display: flex;
     flex-direction: column;

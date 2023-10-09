@@ -9,10 +9,18 @@ import dirt04 from "../assets/dirt04.png";
 import dirt05 from "../assets/dirt05.jpg";
 import dirt06 from "../assets/dirt06.jpg";
 
-import grass01 from "../assets/grass01.png";
+import grass01 from "../assets/grass01.jpg";
 import grass02 from "../assets/grass02.jpg";
 import grass03 from "../assets/grass03.jpg";
 import grass04 from "../assets/grass04.jpg";
+import grass05 from "../assets/grass05.jpg"
+import grass06 from "../assets/grass06.jpg"
+import grass07 from "../assets/grass07.jpeg"
+import grass08 from "../assets/grass08.png"
+import grass09 from "../assets/grass09.jpg"
+import grass11 from "../assets/grass11.jpg"
+
+import sand01 from "../assets/sand.png"
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -32,6 +40,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
   const [showPath, setShowPath] = useState(true);
+  const [theme, setTheme] = useState("forest");
 
   const rerender = () => {
     setSeed(Math.random() * 1000); // Update the seed to trigger a re-render with new noise
@@ -45,10 +54,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       let dirtImg05: p5.Image;
       let dirtImg06: p5.Image;
 
+      let sandImg01: p5.Image;
+
       let grassImg01: p5.Image;
       let grassImg02: p5.Image;
       let grassImg03: p5.Image;
       let grassImg04: p5.Image;
+      let grassImg05: p5.Image;
+      let grassImg06: p5.Image;
+      let grassImg07: p5.Image;
+      let grassImg08: p5.Image;
+      let grassImg09: p5.Image;
+      let grassImg11: p5.Image;
 
       let treeImg01: p5.Image;
       let treeImg02: p5.Image;
@@ -66,10 +83,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         dirtImg05 = p.loadImage(dirt05);
         dirtImg06 = p.loadImage(dirt06);
 
+        sandImg01 = p.loadImage(sand01);
+
         grassImg01 = p.loadImage(grass01);
         grassImg02 = p.loadImage(grass02);
         grassImg03 = p.loadImage(grass03);
         grassImg04 = p.loadImage(grass04);
+        grassImg05 = p.loadImage(grass05);
+        grassImg06 = p.loadImage(grass06);
+        grassImg07 = p.loadImage(grass07);
+        grassImg08 = p.loadImage(grass08);
+        grassImg09 = p.loadImage(grass09);
+        grassImg11 = p.loadImage(grass11);
 
         treeImg01 = p.loadImage(tree01);
         treeImg02 = p.loadImage(tree02);
@@ -109,7 +134,11 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
             p.translate(x + imgSize / 2, y + imgSize / 2);
             // p.rotate(p.radians(rotation));
 
-            p.image(dirtImg04, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
+            if (theme === "forest") {
+                p.image(grassImg11, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
+              } else if (theme === "desert") {
+                p.image(sandImg01, -imgSize / 2, -imgSize / 2, imgSize, imgSize);
+              }
 
             p.pop();
           }
@@ -175,28 +204,40 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   }, [width, height, seed]); // Add seed as a dependency
 
   return (
-    <>
+    <div className="canvasWrapper">
+      <div className="optionsContainer">
+        <button onClick={rerender}>Rerender Sketch</button>{" "}
+        {/* New dropdown for theme selection */}
+        <label>
+          Theme: 
+          <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+            <option value="forest">Forest</option>
+            <option value="desert">Desert</option>
+            {/* Add more options as needed */}
+          </select>
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showTrees}
+            onChange={(e) => setShowTrees(e.target.checked)}
+          />{" "}
+          Show Trees
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showPath}
+            onChange={(e) => setShowPath(e.target.checked)}
+          />{" "}
+          Show Path
+        </label>
+      </div>
+
       <div className="canvasContianer">
         <div ref={canvasRef}></div>
-        <button onClick={rerender}>Rerender Sketch</button>{" "}
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={showTrees}
-              onChange={(e) => setShowTrees(e.target.checked)}
-            /> Show Trees
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={showPath}
-              onChange={(e) => setShowPath(e.target.checked)}
-            /> Show Path
-          </label>
-        </div>
       </div>
-    </>
+    </div>
   );
 };
 
