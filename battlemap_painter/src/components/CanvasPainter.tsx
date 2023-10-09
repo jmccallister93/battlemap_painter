@@ -18,13 +18,13 @@ import grass06 from "../assets/grassTiles/grass06.jpg";
 import grass07 from "../assets/grassTiles/grass07.jpg";
 import grass08 from "../assets/grassTiles/grass08.jpg";
 
-import jungle01 from "../assets/jungleTiles/jungle01.jpg";
-import jungle02 from "../assets/jungleTiles/jungle02.jpg";
-import jungle03 from "../assets/jungleTiles/jungle03.jpg";
-import jungle04 from "../assets/jungleTiles/jungle04.jpg";
-import jungle05 from "../assets/jungleTiles/jungle05.jpg";
-import jungle06 from "../assets/jungleTiles/jungle06.jpg";
-import jungle07 from "../assets/jungleTiles/jungle07.jpg";
+import moss01 from "../assets/mossTiles/moss01.jpg";
+import moss02 from "../assets/mossTiles/moss02.jpg";
+import moss03 from "../assets/mossTiles/moss03.jpg";
+import moss04 from "../assets/mossTiles/moss04.jpg";
+import moss05 from "../assets/mossTiles/moss05.jpg";
+import moss06 from "../assets/mossTiles/moss06.jpg";
+import moss07 from "../assets/mossTiles/moss07.jpg";
 
 import sand01 from "../assets/sand.png";
 
@@ -56,19 +56,11 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   };
 
   const grassTilesImages: p5.Image[] = [];
+  const mossTilesImages: p5.Image[] = [];
 
   useEffect(() => {
     const sketch = (p: p5) => {
       let sandImg01: p5.Image;
-
-      let grassImg01: p5.Image;
-      let grassImg02: p5.Image;
-      let grassImg03: p5.Image;
-      let grassImg04: p5.Image;
-      let grassImg05: p5.Image;
-      let grassImg06: p5.Image;
-      let grassImg07: p5.Image;
-      let grassImg08: p5.Image;
 
       let treeImg01: p5.Image;
       let treeImg02: p5.Image;
@@ -82,7 +74,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       p.preload = () => {
         sandImg01 = p.loadImage(sand01);
 
-        // Populate the mapping object
+        // Populate the grass mapping object
         grassTilesImages[0] = p.loadImage(grass01);
         grassTilesImages[1] = p.loadImage(grass02);
         grassTilesImages[2] = p.loadImage(grass03);
@@ -91,6 +83,15 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         grassTilesImages[5] = p.loadImage(grass06);
         grassTilesImages[6] = p.loadImage(grass07);
         grassTilesImages[7] = p.loadImage(grass08);
+
+        // Populate the moss mapping object
+        mossTilesImages[0] = p.loadImage(moss01);
+        mossTilesImages[1] = p.loadImage(moss02);
+        mossTilesImages[2] = p.loadImage(moss03);
+        mossTilesImages[3] = p.loadImage(moss04);
+        mossTilesImages[4] = p.loadImage(moss05);
+        mossTilesImages[5] = p.loadImage(moss06);
+        mossTilesImages[6] = p.loadImage(moss07);
 
         treeImg01 = p.loadImage(tree01);
         treeImg02 = p.loadImage(tree02);
@@ -123,23 +124,19 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
 
         // Determine the tile to use for this render
         let tile;
-        const grassTiles = [
-          grassImg01,
-          grassImg02,
-          grassImg03,
-          grassImg04,
-          grassImg05,
-          grassImg06,
-          grassImg07,
-          grassImg08,
-        ];
 
-        if (theme === "forest") {
-            if (selectedTileIndex !== null) {
-                tile = grassTilesImages[selectedTileIndex]; // Use the index to get the tile
-            } else {
-                tile = p.random(grassTilesImages);
-            }
+        if (theme === "grass") {
+          if (selectedTileIndex !== null) {
+            tile = grassTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(grassTilesImages);
+          }
+        } else if (theme === "moss") {
+          if (selectedTileIndex !== null) {
+            tile = mossTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(mossTilesImages);
+          }
         }
         // else if (theme === "desert") {
         //   tile = sandImg01;
@@ -214,10 +211,19 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
 
     const myp5 = new p5(sketch, canvasRef.current);
     return () => {
-        console.log('Removing p5 sketch');
-        myp5.remove(); // Ensure the p5 sketch is removed upon component unmount or re-render
-      };
-  }, [width, height, seed, showTrees, showPath, theme, selectedTileIndex, grassTilesImages]); // Add seed as a dependency
+      myp5.remove(); // Ensure the p5 sketch is removed upon component unmount or re-render
+    };
+  }, [
+    width,
+    height,
+    seed,
+    showTrees,
+    showPath,
+    theme,
+    selectedTileIndex,
+    grassTilesImages,
+    mossTilesImages,
+  ]); // Add seed as a dependency
 
   const grassTiles = [
     { label: "Grass 01", value: grass01 },
@@ -230,15 +236,31 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     { label: "Grass 08", value: grass08 },
   ];
 
+  const mossTiles = [
+    { label: "Moss 01", value: moss01 },
+    { label: "Moss 02", value: moss02 },
+    { label: "Moss 03", value: moss03 },
+    { label: "Moss 04", value: moss04 },
+    { label: "Moss 05", value: moss05 },
+    { label: "Moss 06", value: moss06 },
+    { label: "Moss 07", value: moss07 },
+  ];
+
   const getTileOptions = () => {
-    if (theme === "forest") {
+    if (theme === "grass") {
       return grassTiles;
+    } else if (theme === "moss") {
+      return mossTiles;
     }
-    // Add more conditions for other themes with their respective tiles
     return [];
   };
 
   const tileOptions = getTileOptions();
+
+  useEffect(() => {
+    // Reset the selected tile index when theme changes
+    setSelectedTileIndex(null);
+  }, [theme]);
 
   return (
     <div className="canvasWrapper">
@@ -246,17 +268,25 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         <button onClick={rerender}>Rerender Sketch</button>{" "}
         {/* New dropdown for theme selection */}
         <label>
-          Theme:
+          Tile Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-            <option value="forest">Forest</option>
-            <option value="desert">Desert</option>
+            <option value="concreate">Concreate</option>   
+            <option value="dirt">Dirt</option>
+            <option value="gravel">Gravel</option>
+            <option value="grass">Grass</option>
+            <option value="marble">Marble</option>
+            <option value="metal">Metal</option>
+            <option value="moss">Moss</option>
+            <option value="rock">Rock</option>
+            <option value="sand">Sand</option>
+            <option value="snow">Snow</option>
             {/* Add more options as needed */}
           </select>
         </label>
         {tileOptions.length > 0 && (
           <>
             <label>
-              Tile:
+              Tile Type:
               <select
                 value={selectedTileIndex !== null ? selectedTileIndex : ""}
                 onChange={(e) =>
@@ -266,21 +296,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
                 }
               >
                 <option value="">Random</option>
-                {grassTiles.map((option, index) => (
-                  <option key={option.value} value={index}>
-                    {option.label}
-                  </option>
-                ))}
+                {tileOptions.map(
+                  (
+                    option,
+                    index // Updated to use tileOptions state
+                  ) => (
+                    <option key={option.value} value={index}>
+                      {option.label}
+                    </option>
+                  )
+                )}
               </select>
             </label>
-            {/* Display selected tile image */}
-            {/* {selectedTileIndex && (
-              <img
-                src={selectedTileIndex}
-                alt="Selected tile"
-                style={{ width: "50px", height: "auto" }}
-              />
-            )} */}
           </>
         )}
         <label>
