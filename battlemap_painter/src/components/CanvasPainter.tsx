@@ -44,11 +44,11 @@ import marble06 from "../assets/marbleTiles/marble06.jpg";
 import marble07 from "../assets/marbleTiles/marble07.jpg";
 import marble08 from "../assets/marbleTiles/marble08.jpg";
 
-import metal01 from "../assets/metalTiles/metal01.jpg"
-import metal02 from "../assets/metalTiles/metal02.jpg"
-import metal03 from "../assets/metalTiles/metal03.jpg"
-import metal04 from "../assets/metalTiles/metal04.jpg"
-import metal05 from "../assets/metalTiles/metal05.jpg"
+import metal01 from "../assets/metalTiles/metal01.jpg";
+import metal02 from "../assets/metalTiles/metal02.jpg";
+import metal03 from "../assets/metalTiles/metal03.jpg";
+import metal04 from "../assets/metalTiles/metal04.jpg";
+import metal05 from "../assets/metalTiles/metal05.jpg";
 
 import moss01 from "../assets/mossTiles/moss01.jpg";
 import moss02 from "../assets/mossTiles/moss02.jpg";
@@ -72,22 +72,30 @@ import rock11 from "../assets/rockTiles/rock11.jpg";
 import rock12 from "../assets/rockTiles/rock12.jpg";
 import rock13 from "../assets/rockTiles/rock13.jpg";
 
-import sand01 from "../assets/sandTiles/sand01.jpg"
-import sand02 from "../assets/sandTiles/sand02.jpg"
-import sand03 from "../assets/sandTiles/sand03.jpg"
-import sand04 from "../assets/sandTiles/sand04.jpg"
-import sand05 from "../assets/sandTiles/sand05.jpg"
-import sand06 from "../assets/sandTiles/sand06.jpg"
-import sand07 from "../assets/sandTiles/sand07.jpg"
+import sand01 from "../assets/sandTiles/sand01.jpg";
+import sand02 from "../assets/sandTiles/sand02.jpg";
+import sand03 from "../assets/sandTiles/sand03.jpg";
+import sand04 from "../assets/sandTiles/sand04.jpg";
+import sand05 from "../assets/sandTiles/sand05.jpg";
+import sand06 from "../assets/sandTiles/sand06.jpg";
+import sand07 from "../assets/sandTiles/sand07.jpg";
 
-import snow01 from "../assets/snowTiles/snow01.jpg"
-import snow02 from "../assets/snowTiles/snow02.jpg"
-import snow03 from "../assets/snowTiles/snow03.jpg"
-import snow04 from "../assets/snowTiles/snow04.jpg"
-import snow05 from "../assets/snowTiles/snow05.jpg"
-import snow06 from "../assets/snowTiles/snow06.jpg"
-import snow07 from "../assets/snowTiles/snow07.jpg"
+import snow01 from "../assets/snowTiles/snow01.jpg";
+import snow02 from "../assets/snowTiles/snow02.jpg";
+import snow03 from "../assets/snowTiles/snow03.jpg";
+import snow04 from "../assets/snowTiles/snow04.jpg";
+import snow05 from "../assets/snowTiles/snow05.jpg";
+import snow06 from "../assets/snowTiles/snow06.jpg";
+import snow07 from "../assets/snowTiles/snow07.jpg";
 
+import boulder01 from "../assets/boulderAssets/boulder14.png";
+import boulder02 from "../assets/boulderAssets/boulder02.png";
+import boulder03 from "../assets/boulderAssets/boulder03.png";
+import boulder04 from "../assets/boulderAssets/boulder04.png";
+import boulder05 from "../assets/boulderAssets/boulder05.png";
+import boulder06 from "../assets/boulderAssets/boulder06.png";
+import boulder07 from "../assets/boulderAssets/boulder07.png";
+import boulder08 from "../assets/boulderAssets/boulder08.png";
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -106,6 +114,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
   const canvasRef = useRef<any>(null);
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
+  const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
   const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("concreate");
   const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(
@@ -183,10 +192,18 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
 
   useEffect(() => {
     const sketch = (p: p5) => {
-
       let treeImg01: p5.Image;
       let treeImg02: p5.Image;
       let treeImg03: p5.Image;
+
+      let boulderImg01: p5.Image;
+      let boulderImg02: p5.Image;
+      let boulderImg03: p5.Image;
+      let boulderImg04: p5.Image;
+      let boulderImg05: p5.Image;
+      let boulderImg06: p5.Image;
+      let boulderImg07: p5.Image;
+      let boulderImg08: p5.Image;
 
       let tilePathImg01: p5.Image;
       let tilePathImg02: p5.Image;
@@ -244,13 +261,13 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           marbleTilesImages[6] = p.loadImage(marble07);
           marbleTilesImages[7] = p.loadImage(marble08);
         } else if (theme === "metal") {
-            // Populate the metal mapping object
+          // Populate the metal mapping object
           metalTilesImages[0] = p.loadImage(metal01);
           metalTilesImages[1] = p.loadImage(metal02);
           metalTilesImages[2] = p.loadImage(metal03);
           metalTilesImages[3] = p.loadImage(metal04);
           metalTilesImages[4] = p.loadImage(metal05);
-          } else if (theme === "moss") {
+        } else if (theme === "moss") {
           // Populate the moss mapping object
           mossTilesImages[0] = p.loadImage(moss01);
           mossTilesImages[1] = p.loadImage(moss02);
@@ -259,46 +276,53 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           mossTilesImages[4] = p.loadImage(moss05);
           mossTilesImages[5] = p.loadImage(moss06);
           mossTilesImages[6] = p.loadImage(moss07);
-        }else if (theme === "rock") {
-            // Populate the rock mapping object
-            rockTilesImages[0] = p.loadImage(rock01);
-            rockTilesImages[1] = p.loadImage(rock02);
-            rockTilesImages[2] = p.loadImage(rock03);
-            rockTilesImages[3] = p.loadImage(rock04);
-            rockTilesImages[4] = p.loadImage(rock05);
-            rockTilesImages[5] = p.loadImage(rock06);
-            rockTilesImages[6] = p.loadImage(rock07); 
-            rockTilesImages[7] = p.loadImage(rock02);
-            rockTilesImages[8] = p.loadImage(rock03);
-            rockTilesImages[9] = p.loadImage(rock04);
-            rockTilesImages[10] = p.loadImage(rock05);
-            rockTilesImages[11] = p.loadImage(rock06);
-            rockTilesImages[12] = p.loadImage(rock07);
-        
-          }else if (theme === "sand") {
-            // Populate the metal mapping object
-            sandTilesImages[0] = p.loadImage(sand01);
-            sandTilesImages[1] = p.loadImage(sand02);
-            sandTilesImages[2] = p.loadImage(sand03);
-            sandTilesImages[3] = p.loadImage(sand04);
-            sandTilesImages[4] = p.loadImage(sand05);
-            sandTilesImages[5] = p.loadImage(sand06);
-            sandTilesImages[6] = p.loadImage(sand07); 
-        
-          }else if (theme === "snow") {
-            // Populate the metal mapping object
-            snowTilesImages[0] = p.loadImage(snow01);
-            snowTilesImages[1] = p.loadImage(snow02);
-            snowTilesImages[2] = p.loadImage(snow03);
-            snowTilesImages[3] = p.loadImage(snow04);
-            snowTilesImages[4] = p.loadImage(snow05);
-            snowTilesImages[5] = p.loadImage(snow06);
-            snowTilesImages[6] = p.loadImage(snow07); 
-          }
+        } else if (theme === "rock") {
+          // Populate the rock mapping object
+          rockTilesImages[0] = p.loadImage(rock01);
+          rockTilesImages[1] = p.loadImage(rock02);
+          rockTilesImages[2] = p.loadImage(rock03);
+          rockTilesImages[3] = p.loadImage(rock04);
+          rockTilesImages[4] = p.loadImage(rock05);
+          rockTilesImages[5] = p.loadImage(rock06);
+          rockTilesImages[6] = p.loadImage(rock07);
+          rockTilesImages[7] = p.loadImage(rock02);
+          rockTilesImages[8] = p.loadImage(rock03);
+          rockTilesImages[9] = p.loadImage(rock04);
+          rockTilesImages[10] = p.loadImage(rock05);
+          rockTilesImages[11] = p.loadImage(rock06);
+          rockTilesImages[12] = p.loadImage(rock07);
+        } else if (theme === "sand") {
+          // Populate the metal mapping object
+          sandTilesImages[0] = p.loadImage(sand01);
+          sandTilesImages[1] = p.loadImage(sand02);
+          sandTilesImages[2] = p.loadImage(sand03);
+          sandTilesImages[3] = p.loadImage(sand04);
+          sandTilesImages[4] = p.loadImage(sand05);
+          sandTilesImages[5] = p.loadImage(sand06);
+          sandTilesImages[6] = p.loadImage(sand07);
+        } else if (theme === "snow") {
+          // Populate the metal mapping object
+          snowTilesImages[0] = p.loadImage(snow01);
+          snowTilesImages[1] = p.loadImage(snow02);
+          snowTilesImages[2] = p.loadImage(snow03);
+          snowTilesImages[3] = p.loadImage(snow04);
+          snowTilesImages[4] = p.loadImage(snow05);
+          snowTilesImages[5] = p.loadImage(snow06);
+          snowTilesImages[6] = p.loadImage(snow07);
+        }
 
-        treeImg01 = p.loadImage(tree01);
+        treeImg01 = p.loadImage(boulder01);
         treeImg02 = p.loadImage(tree02);
         treeImg03 = p.loadImage(tree03);
+
+        boulderImg01 = p.loadImage(boulder01);
+        boulderImg02 = p.loadImage(boulder02);
+        boulderImg03 = p.loadImage(boulder03);
+        boulderImg04 = p.loadImage(boulder04);
+        boulderImg05 = p.loadImage(boulder05);
+        boulderImg06 = p.loadImage(boulder06);
+        boulderImg07 = p.loadImage(boulder07);
+        boulderImg08 = p.loadImage(boulder08);
 
         tilePathImg01 = p.loadImage(tilePath01);
         tilePathImg02 = p.loadImage(tilePath02);
@@ -358,36 +382,36 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
             tile = p.random(marbleTilesImages);
           }
         } else if (theme === "metal") {
-            if (selectedTileIndex !== null) {
-              tile = metalTilesImages[selectedTileIndex]; // Use the index to get the tile
-            } else {
-              tile = p.random(metalTilesImages);
-            }
-          } else if (theme === "moss") {
+          if (selectedTileIndex !== null) {
+            tile = metalTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(metalTilesImages);
+          }
+        } else if (theme === "moss") {
           if (selectedTileIndex !== null) {
             tile = mossTilesImages[selectedTileIndex]; // Use the index to get the tile
           } else {
             tile = p.random(mossTilesImages);
           }
-        }else if (theme === "rock") {
-            if (selectedTileIndex !== null) {
-              tile = rockTilesImages[selectedTileIndex]; // Use the index to get the tile
-            } else {
-              tile = p.random(rockTilesImages);
-            }
-          } else if (theme === "sand") {
-            if (selectedTileIndex !== null) {
-              tile = sandTilesImages[selectedTileIndex]; // Use the index to get the tile
-            } else {
-              tile = p.random(sandTilesImages);
-            }
-          } else if (theme === "snow") {
-            if (selectedTileIndex !== null) {
-              tile = snowTilesImages[selectedTileIndex]; // Use the index to get the tile
-            } else {
-              tile = p.random(snowTilesImages);
-            }
-          } 
+        } else if (theme === "rock") {
+          if (selectedTileIndex !== null) {
+            tile = rockTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(rockTilesImages);
+          }
+        } else if (theme === "sand") {
+          if (selectedTileIndex !== null) {
+            tile = sandTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(sandTilesImages);
+          }
+        } else if (theme === "snow") {
+          if (selectedTileIndex !== null) {
+            tile = snowTilesImages[selectedTileIndex]; // Use the index to get the tile
+          } else {
+            tile = p.random(snowTilesImages);
+          }
+        }
         // else if (theme === "desert") {
         //   tile = sandImg01;
         // }
@@ -451,6 +475,45 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
                 p.scale(treeScale);
                 p.rotate(p.radians(treeRotation));
                 p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);
+                p.pop();
+              }
+            }
+          }
+        }
+
+        // Draw all boulders
+        const boulders = [
+          boulderImg01,
+          boulderImg02,
+          boulderImg03,
+          boulderImg04,
+          boulderImg05,
+          boulderImg06,
+          boulderImg07,
+          boulderImg08,
+        ];
+        if (showBoulders) {
+          for (let y = 0; y < p.height; y += tileSize) {
+            for (let x = 0; x < p.width; x += tileSize) {
+              if (Math.random() < 0.01) {
+                if (
+                  (isHorizontalPath && y === pathPos) ||
+                  (!isHorizontalPath && x === pathPos)
+                ) {
+                  continue;
+                }
+
+                const boulderImg = p.random(boulders);
+                const minBoulderScale = 0.1;
+                const maxBoulderScale = 0.5;
+                const boulderScale = minBoulderScale + Math.random() * (maxBoulderScale - minBoulderScale);
+                const boulderRotation = Math.random() * 360;
+
+                p.push();
+                p.translate(x + tileSize / 2, y + tileSize / 2);
+                p.scale(boulderScale);
+                p.rotate(p.radians(boulderRotation));
+                p.image(boulderImg, -boulderImg.width / 2, -boulderImg.height / 2);
                 p.pop();
               }
             }
@@ -522,7 +585,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     { label: "Metal 03", value: metal03 },
     { label: "Metal 04", value: metal04 },
     { label: "Metal 05", value: metal05 },
-  ]
+  ];
 
   const mossTiles = [
     { label: "Moss 01", value: moss01 },
@@ -548,7 +611,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     { label: "Rock 11", value: rock11 },
     { label: "Rock 12", value: rock12 },
     { label: "Rock 13", value: rock13 },
-  ]
+  ];
 
   const sandTiles = [
     { label: "Sand 01", value: sand01 },
@@ -558,7 +621,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     { label: "Sand 05", value: sand05 },
     { label: "Sand 06", value: sand06 },
     { label: "Sand 07", value: sand07 },
-  ]
+  ];
 
   const snowTiles = [
     { label: "Snow 01", value: snow01 },
@@ -568,8 +631,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     { label: "Snow 05", value: snow05 },
     { label: "Snow 06", value: snow06 },
     { label: "Snow 07", value: snow07 },
-  ]
-
+  ];
 
   const getTileOptions = () => {
     if (theme === "concreate") {
