@@ -311,7 +311,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           snowTilesImages[6] = p.loadImage(snow07);
         }
 
-        treeImg01 = p.loadImage(boulder01);
+        treeImg01 = p.loadImage(tree01);
         treeImg02 = p.loadImage(tree02);
         treeImg03 = p.loadImage(tree03);
 
