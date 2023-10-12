@@ -1,9 +1,10 @@
 import CanvasPainter from "../components/CanvasPainter";
+import "../style/Home.css"
 
 const Home = () => {
   return (
-    <div>
-      <CanvasPainter width={1080} height={1080} />
+    <div className="homeContainter">
+      <CanvasPainter />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import "../style/CanvasPainter.css";
 
 import assets from "./CentralIndex";
 
-const CanvasPainter = ({ width, height }) => {
+const CanvasPainter = () => {
   const canvasRef = useRef(null);
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
@@ -18,6 +18,8 @@ const CanvasPainter = ({ width, height }) => {
   const [theme, setTheme] = useState("grass");
   const [selectedTileIndex, setSelectedTileIndex] = useState(null);
   const [tileOptions, setTileOptions] = useState([]);
+  const [width, setWidth] = useState(1080);
+  const [height, setHeight] = useState(1080);
 
   // Utility function outside of sketch to load in images
   const preloadImages = (p, assets) => {
@@ -229,21 +231,38 @@ const CanvasPainter = ({ width, height }) => {
   return (
     <div className="canvasWrapper">
       <div className="optionsContainer">
-        <button onClick={rerender}>Rerender Sketch</button> {/* Tiles */}
+        {/* Rerender */}
+        <button onClick={rerender}>Rerender Sketch</button>
+        {/* Height and Width */}
+        <label>
+          Canvas Width:
+          <select value={width} onChange={(e) => setWidth(e.target.value)}>
+            <option value="1920">1920px</option>
+            <option value="1440">1440px</option>
+            <option value="1280">1280px</option>
+            <option value="1080">1080px</option>
+            <option value="720">720px</option>
+          </select>
+        </label>
+        <label>
+          Canvas Height:
+          <select value={height} onChange={(e) => setHeight(e.target.value)}>
+            <option value="1920">1920px</option>
+            <option value="1440">1440px</option>
+            <option value="1280">1280px</option>
+            <option value="1080">1080px</option>
+            <option value="720">720px</option>
+          </select>
+        </label>
+        {/* Tiles */}
         <label>
           Tile Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-            {/* <option value="concreate">Concreate</option> */}
             <option value="dirt">Dirt</option>
-            {/* <option value="gravel">Gravel</option> */}
             <option value="grass">Grass</option>
-            {/* <option value="marble">Marble</option>
-            <option value="metal">Metal</option>
-            <option value="moss">Moss</option> */}
             <option value="rock">Rock</option>
             <option value="sand">Sand</option>
             <option value="snow">Snow</option>
-            {/* Add more options as needed */}
           </select>
         </label>
         {tileOptions.length > 0 && (
