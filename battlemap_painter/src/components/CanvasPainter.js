@@ -3,6 +3,7 @@ import p5 from "p5";
 import "../style/CanvasPainter.css";
 
 import assets from "./CentralIndex";
+import dirtTiles from "../groupTiles/dirtTiles";
 
 const CanvasPainter = () => {
   const canvasRef = useRef(null);
@@ -13,6 +14,9 @@ const CanvasPainter = () => {
   const [width, setWidth] = useState(1080);
   const [height, setHeight] = useState(1080);
   const [lighting, setLighting] = useState("day");
+
+  const [showDirtPaths, setShowDirtPaths] = useState(true);
+  const [dirtPathScale, setDirtPathScale] = useState(3);
 
   const [showRocks, setShowRocks] = useState(true);
   const [rocksScale, setRocksScale] = useState(3);
@@ -45,7 +49,6 @@ const CanvasPainter = () => {
   // Main UseEffect
   useEffect(() => {
     const sketch = (p) => {
-
       // Create tiles array
       const tilesMap = {
         dirt: assets.dirtTiles,
@@ -57,6 +60,7 @@ const CanvasPainter = () => {
       let tilesImages = [];
 
       // Create asset arrays
+      let dirtPathImgs = assets.dirtPaths;
       let rocksImgs = assets.rocks;
       let flowerImgs = assets.flower;
       let bushImgs = assets.bush;
@@ -79,7 +83,9 @@ const CanvasPainter = () => {
         scale,
         positionsArray,
         probability,
-      ) => { 
+        objectWidth = null,
+        objectHeight = null
+      ) => {
         if (show) {
           for (let y = 0; y < p.height; y += tileSize) {
             for (let x = 0; x < p.width; x += tileSize) {
@@ -99,7 +105,18 @@ const CanvasPainter = () => {
                 p.drawingContext.shadowOffsetY = 2;
                 p.drawingContext.shadowBlur = 5;
                 p.drawingContext.shadowColor = "black";
-                p.image(img, -img.width / 2, -img.height / 2);
+                if (objectWidth || objectHeight) {
+                  // Using specified objectWidth and objectHeight if provided
+                  p.image(
+                    img,
+                    -objectWidth / 2,
+                    -objectHeight / 2,
+                    objectWidth *6,
+                    objectHeight
+                  );
+                } else {
+                  p.image(img, -img.width / 2, -img.height / 2);
+                }
 
                 positionsArray.push({ x, y });
 
@@ -107,10 +124,8 @@ const CanvasPainter = () => {
               }
             }
           }
-          
         }
       };
-
 
       //   Preload images
       p.preload = () => {
@@ -120,6 +135,7 @@ const CanvasPainter = () => {
         }
 
         // Preload the assets into Arrays for drwaing
+        dirtPathImgs = preloadImages(p, assets.dirtPaths);
         rocksImgs = preloadImages(p, assets.rocks);
         flowerImgs = preloadImages(p, assets.flower);
         bushImgs = preloadImages(p, assets.bush);
@@ -182,6 +198,19 @@ const CanvasPainter = () => {
         setTileOptions(getTileOptions());
 
         // Draw Rocks
+        const dirtPathPositions = [];
+        drawObjects(
+          showDirtPaths,
+          dirtPathImgs,
+          0.5,
+          0.8,
+          dirtPathScale,
+          dirtPathPositions,
+          0.01,
+         p.width /4,
+        );
+
+        // Draw Rocks
         const rocksPositions = [];
         drawObjects(
           showRocks,
@@ -190,7 +219,7 @@ const CanvasPainter = () => {
           1.1,
           rocksScale,
           rocksPositions,
-          0.1,
+          0.1
         );
         // Draw all branches
         const branchPositions = [];
@@ -201,7 +230,7 @@ const CanvasPainter = () => {
           0.1,
           branchScale,
           branchPositions,
-          0.04,
+          0.04
         );
         // Draw all stumps
         const stumpPositions = [];
@@ -212,7 +241,7 @@ const CanvasPainter = () => {
           0.1,
           stumpScale,
           stumpPositions,
-          0.04,
+          0.04
         );
 
         // Draw Flowers
@@ -224,7 +253,7 @@ const CanvasPainter = () => {
           0.5,
           flowerScale,
           flowerPositions,
-          0.1,
+          0.1
         );
 
         // Draw Bushes
@@ -236,7 +265,7 @@ const CanvasPainter = () => {
           0.4,
           bushScale,
           bushPositions,
-          0.1,
+          0.1
         );
 
         //Draw Boulders
@@ -248,7 +277,7 @@ const CanvasPainter = () => {
           0.8,
           boulderScale,
           boulderPositions,
-          0.04,
+          0.04
         );
 
         //Determine where Boulders are
@@ -265,7 +294,7 @@ const CanvasPainter = () => {
           0.4,
           treeScale,
           treePositions,
-          0.04,
+          0.15
         );
 
         // Lighting hue
@@ -285,7 +314,6 @@ const CanvasPainter = () => {
         }
 
         p.rect(0, 0, p.width, p.height); // draw a rectangle over the entire canvas
-        
       };
     };
 
@@ -294,8 +322,8 @@ const CanvasPainter = () => {
       myp5.remove(); // Ensure the p5 sketch is removed upon component unmount or re-render
     };
   }, [
-    width,
-    height,
+    // width,
+    // height,
     seed,
     // showTrees,
     // showBushes,
@@ -307,13 +335,12 @@ const CanvasPainter = () => {
     // flowerScale,
     // rocksScale,
     // treeScale,
-    lighting,
-    theme,
+    // lighting,
+    // theme,
     selectedTileIndex,
   ]);
 
-
-// Create toggles for UI render
+  // Create toggles for UI render
   const ShowElementControl = ({
     label,
     isChecked,
@@ -427,6 +454,15 @@ const CanvasPainter = () => {
             </label>
           </>
         )}
+        {/* Dirt Paths */}
+        <ShowElementControl
+          label="Show Dirt Paths"
+          isChecked={showDirtPaths}
+          onCheckedChanged={setShowDirtPaths}
+          volumeLabel="Path Volume"
+          volumeValue={dirtPathScale}
+          onVolumeChanged={setDirtPathScale}
+        />
         {/* Trees */}
         <ShowElementControl
           label="Show Trees"
