@@ -18,6 +18,7 @@ import dirt05 from "../assets/dirtTiles/dirt05.jpg";
 import dirt06 from "../assets/dirtTiles/dirt06.jpg";
 import dirt07 from "../assets/dirtTiles/dirt07.jpg";
 import dirt08 from "../assets/dirtTiles/dirt08.jpg";
+import dirt09 from "../assets/dirtTiles/dirt09.jpg";
 
 import grass01 from "../assets/grassTiles/grass09.jpg";
 import grass02 from "../assets/grassTiles/grass02.jpg";
@@ -27,6 +28,7 @@ import grass05 from "../assets/grassTiles/grass05.jpg";
 import grass06 from "../assets/grassTiles/grass06.jpg";
 import grass07 from "../assets/grassTiles/grass07.jpg";
 import grass08 from "../assets/grassTiles/grass08.jpg";
+import grass09 from "../assets/grassTiles/grass09.jpg";
 
 import gravel01 from "../assets/gravelTiles/gravel01.jpg";
 import gravel02 from "../assets/gravelTiles/gravel02.jpg";
@@ -50,7 +52,7 @@ import metal03 from "../assets/metalTiles/metal03.jpg";
 import metal04 from "../assets/metalTiles/metal04.jpg";
 import metal05 from "../assets/metalTiles/metal05.jpg";
 
-import moss01 from "../assets/mossTiles/moss01.jpg";
+import moss01 from "../assets/mossTiles/moss08.jpg";
 import moss02 from "../assets/mossTiles/moss02.jpg";
 import moss03 from "../assets/mossTiles/moss03.jpg";
 import moss04 from "../assets/mossTiles/moss04.jpg";
@@ -79,6 +81,8 @@ import sand04 from "../assets/sandTiles/sand04.jpg";
 import sand05 from "../assets/sandTiles/sand05.jpg";
 import sand06 from "../assets/sandTiles/sand06.jpg";
 import sand07 from "../assets/sandTiles/sand07.jpg";
+import sand08 from "../assets/sandTiles/sand08.jpg";
+import sand09 from "../assets/sandTiles/sand09.jpg";
 
 import snow01 from "../assets/snowTiles/snow01.jpg";
 import snow02 from "../assets/snowTiles/snow02.jpg";
@@ -87,16 +91,18 @@ import snow04 from "../assets/snowTiles/snow04.jpg";
 import snow05 from "../assets/snowTiles/snow05.jpg";
 import snow06 from "../assets/snowTiles/snow06.jpg";
 import snow07 from "../assets/snowTiles/snow07.jpg";
+import snow08 from "../assets/snowTiles/snow08.jpg";
+import snow09 from "../assets/snowTiles/snow09.jpg";
 
-import boulder01 from "../assets/boulderAssets/cliff.png";
+import boulder01 from "../assets/boulderAssets/boulder01.png";
 import boulder02 from "../assets/boulderAssets/boulder02.png";
 import boulder03 from "../assets/boulderAssets/boulder03.png";
 import boulder04 from "../assets/boulderAssets/boulder04.png";
 import boulder05 from "../assets/boulderAssets/boulder05.png";
 
-import rocks01 from "../assets/rockPilesAssets/RockPile01.png"
-import rocks02 from "../assets/rockPilesAssets/RockPile02.png"
-import rocks03 from "../assets/rockPilesAssets/RockPile03.png"
+import rocks01 from "../assets/rockPilesAssets/RockPile01.png";
+import rocks02 from "../assets/rockPilesAssets/RockPile02.png";
+import rocks03 from "../assets/rockPilesAssets/RockPile03.png";
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -115,13 +121,11 @@ const CanvasPainter = ({ width, height }) => {
   const canvasRef = useRef(null);
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
-  const [treeScale, setTreeScale] =useState(5)
+  const [treeScale, setTreeScale] = useState(5);
   const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
   const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("concreate");
-  const [selectedTileIndex, setSelectedTileIndex] = useState(
-    null
-  );
+  const [selectedTileIndex, setSelectedTileIndex] = useState(null);
 
   const [images, setImages] = useState({});
 
@@ -235,6 +239,7 @@ const CanvasPainter = ({ width, height }) => {
           dirtTilesImages[5] = p.loadImage(dirt06);
           dirtTilesImages[6] = p.loadImage(dirt07);
           dirtTilesImages[7] = p.loadImage(dirt08);
+          dirtTilesImages[8] = p.loadImage(dirt09);
         } else if (theme === "grass") {
           // Populate the grass mapping object
           grassTilesImages[0] = p.loadImage(grass01);
@@ -245,6 +250,7 @@ const CanvasPainter = ({ width, height }) => {
           grassTilesImages[5] = p.loadImage(grass06);
           grassTilesImages[6] = p.loadImage(grass07);
           grassTilesImages[7] = p.loadImage(grass08);
+          grassTilesImages[8] = p.loadImage(grass09);
         } else if (theme === "gravel") {
           // Populate the grass mapping object
           gravelTilesImages[0] = p.loadImage(gravel01);
@@ -288,12 +294,12 @@ const CanvasPainter = ({ width, height }) => {
           rockTilesImages[4] = p.loadImage(rock05);
           rockTilesImages[5] = p.loadImage(rock06);
           rockTilesImages[6] = p.loadImage(rock07);
-          rockTilesImages[7] = p.loadImage(rock02);
-          rockTilesImages[8] = p.loadImage(rock03);
-          rockTilesImages[9] = p.loadImage(rock04);
-          rockTilesImages[10] = p.loadImage(rock05);
-          rockTilesImages[11] = p.loadImage(rock06);
-          rockTilesImages[12] = p.loadImage(rock07);
+          rockTilesImages[7] = p.loadImage(rock08);
+          rockTilesImages[8] = p.loadImage(rock09);
+          // rockTilesImages[9] = p.loadImage(rock04);
+          // rockTilesImages[10] = p.loadImage(rock05);
+          // rockTilesImages[11] = p.loadImage(rock06);
+          // rockTilesImages[12] = p.loadImage(rock07);
         } else if (theme === "sand") {
           // Populate the metal mapping object
           sandTilesImages[0] = p.loadImage(sand01);
@@ -303,6 +309,8 @@ const CanvasPainter = ({ width, height }) => {
           sandTilesImages[4] = p.loadImage(sand05);
           sandTilesImages[5] = p.loadImage(sand06);
           sandTilesImages[6] = p.loadImage(sand07);
+          sandTilesImages[7] = p.loadImage(sand08);
+          sandTilesImages[8] = p.loadImage(sand09);
         } else if (theme === "snow") {
           // Populate the metal mapping object
           snowTilesImages[0] = p.loadImage(snow01);
@@ -312,6 +320,8 @@ const CanvasPainter = ({ width, height }) => {
           snowTilesImages[4] = p.loadImage(snow05);
           snowTilesImages[5] = p.loadImage(snow06);
           snowTilesImages[6] = p.loadImage(snow07);
+          snowTilesImages[7] = p.loadImage(snow08);
+          snowTilesImages[8] = p.loadImage(snow09);
         }
 
         treeImg01 = p.loadImage(tree01);
@@ -501,9 +511,10 @@ const CanvasPainter = ({ width, height }) => {
           }
         }
 
-        
         function mapRange(value, inMin, inMax, outMin, outMax) {
-          return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+          return (
+            ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
+          );
         }
         const trees = [treeImg01, treeImg02, treeImg03];
         // Draw all trees
@@ -524,14 +535,18 @@ const CanvasPainter = ({ width, height }) => {
                 const minTreeScale = 0.4;
                 const maxTreeScale = 0.7;
                 const treeScale =
-                minTreeScale +
-                  Math.random() * (maxTreeScale - minTreeScale);
-                  const treeRotation = Math.random() * 360;
+                  minTreeScale + Math.random() * (maxTreeScale - minTreeScale);
+                const treeRotation = Math.random() * 360;
 
                 p.push();
                 p.translate(x + tileSize / 2, y + tileSize / 2);
                 p.scale(treeScale);
                 p.rotate(p.radians(treeRotation));
+                // Adding shadow
+                p.drawingContext.shadowOffsetX = 8;
+                p.drawingContext.shadowOffsetY = 8;
+                p.drawingContext.shadowBlur = 5;
+                p.drawingContext.shadowColor = "black";
                 p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);
                 p.pop();
               }
@@ -566,6 +581,7 @@ const CanvasPainter = ({ width, height }) => {
     { label: "Dirt 06", value: dirt06 },
     { label: "Dirt 07", value: dirt07 },
     { label: "Dirt 08", value: dirt08 },
+    { label: "Dirt 09", value: dirt09 },
   ];
 
   const grassTiles = [
@@ -577,6 +593,7 @@ const CanvasPainter = ({ width, height }) => {
     { label: "Grass 06", value: grass06 },
     { label: "Grass 07", value: grass07 },
     { label: "Grass 08", value: grass08 },
+    { label: "Grass 09", value: grass09 },
   ];
 
   const gravelTiles = [
@@ -640,6 +657,8 @@ const CanvasPainter = ({ width, height }) => {
     { label: "Sand 05", value: sand05 },
     { label: "Sand 06", value: sand06 },
     { label: "Sand 07", value: sand07 },
+    { label: "Sand 08", value: sand08 },
+    { label: "Sand 09", value: sand09 },
   ];
 
   const snowTiles = [
@@ -650,6 +669,8 @@ const CanvasPainter = ({ width, height }) => {
     { label: "Snow 05", value: snow05 },
     { label: "Snow 06", value: snow06 },
     { label: "Snow 07", value: snow07 },
+    { label: "Snow 08", value: snow08 },
+    { label: "Snow 09", value: snow09 },
   ];
 
   const getTileOptions = () => {
@@ -683,8 +704,6 @@ const CanvasPainter = ({ width, height }) => {
     // Reset the selected tile index when theme changes
     setSelectedTileIndex(null);
   }, [theme]);
-
-  
 
   return (
     <div className="canvasWrapper">
@@ -743,19 +762,19 @@ const CanvasPainter = ({ width, height }) => {
           Show Trees
         </label>
         {showTrees && ( // Only show the slider when the checkbox is checked
-        <div>
-          <label>
-            Tree Volume: {treeScale} 
-            <input
-              type="range"
-              min="0"
-              max="10"
-              value={treeScale}
-              onChange={(e) => setTreeScale(e.target.value)}
-            />
-          </label>
-        </div>
-      )}
+          <div>
+            <label>
+              Tree Volume: {treeScale}
+              <input
+                type="range"
+                min="0"
+                max="10"
+                value={treeScale}
+                onChange={(e) => setTreeScale(e.target.value)}
+              />
+            </label>
+          </div>
+        )}
         <label>
           <input
             type="checkbox"
