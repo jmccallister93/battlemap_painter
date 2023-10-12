@@ -108,9 +108,10 @@ import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
 import tree03 from "../assets/tree03.png";
 
-import dirtPath01 from "../assets/dirtPath01.png";
-import tilePath01 from "../assets/tilePath01.jpg";
-import tilePath02 from "../assets/tilePath02.jpg";
+import path01 from "../assets/path01.png";
+import path02 from "../assets/path02.png";
+import path03 from "../assets/path03.png";
+import path04 from "../assets/path04.png";
 
 // interface Props {
 //   width: number;
@@ -165,9 +166,10 @@ const CanvasPainter = ({ width, height }) => {
       tree01,
       tree02,
       tree03,
-      dirtPath01,
-      tilePath01,
-      tilePath02,
+      path03,
+      path01,
+      path02,
+      path04,
     ];
 
     const imgs = {};
@@ -197,24 +199,25 @@ const CanvasPainter = ({ width, height }) => {
   const snowTilesImages = [];
 
   useEffect(() => {
-    const sketch = (p: p5) => {
-      let treeImg01: p5.Image;
-      let treeImg02: p5.Image;
-      let treeImg03: p5.Image;
+    const sketch = (p) => {
+      let treeImg01;
+      let treeImg02;
+      let treeImg03;
 
-      let boulderImg01: p5.Image;
-      let boulderImg02: p5.Image;
-      let boulderImg03: p5.Image;
-      let boulderImg04: p5.Image;
-      let boulderImg05: p5.Image;
+      let boulderImg01;
+      let boulderImg02;
+      let boulderImg03;
+      let boulderImg04;
+      let boulderImg05;
 
-      let rocksImg01: p5.Image;
-      let rocksImg02: p5.Image;
-      let rocksImg03: p5.Image;
+      let rocksImg01;
+      let rocksImg02;
+      let rocksImg03;
 
-      let tilePathImg01: p5.Image;
-      let tilePathImg02: p5.Image;
-      let dirtPathImg: p5.Image;
+      let pathImg01;
+      let pathImg02;
+      let pathImg03;
+      let pathImg04;
 
       console.log("ran");
 
@@ -338,9 +341,10 @@ const CanvasPainter = ({ width, height }) => {
         rocksImg02 = p.loadImage(rocks02);
         rocksImg03 = p.loadImage(rocks03);
 
-        tilePathImg01 = p.loadImage(tilePath01);
-        tilePathImg02 = p.loadImage(tilePath02);
-        dirtPathImg = p.loadImage(dirtPath01);
+        pathImg01 = p.loadImage(path01);
+        pathImg02 = p.loadImage(path02);
+        pathImg03 = p.loadImage(path03);
+        pathImg04 = p.loadImage(path04);
       };
       //   Setup canvas
       p.setup = () => {
@@ -426,9 +430,7 @@ const CanvasPainter = ({ width, height }) => {
             tile = p.random(snowTilesImages);
           }
         }
-        // else if (theme === "desert") {
-        //   tile = sandImg01;
-        // }
+
         if (!tile) {
           console.error("Tile is undefined");
           return; // If tile is still undefined for some reason, log an error and return to avoid further errors
@@ -443,28 +445,83 @@ const CanvasPainter = ({ width, height }) => {
           }
         }
 
+        const paths = [pathImg01,];
+
+        let randomDirection = Math.floor(Math.random() * 2);
+        let currentDirection =
+          randomDirection === 1 ? "horizontal" : "vertical";
+
         // Draw path tiles over the base tiles
-        if (showPath) {
-          if (isHorizontalPath) {
-            for (let x = 0; x < p.width; x += tileSize) {
-              p.push(); // Add this line to isolate the rotation transformation
-              p.translate(x + tileSize / 2, pathPos + tileSize / 2); // Adjust the origin for rotation
-              p.rotate(p.radians(90)); // Rotate the coordinate system by 90 degrees
-              p.image(
-                tilePathImg02,
-                -tileSize / 2,
-                -tileSize / 2,
-                tileSize,
-                tileSize
-              ); // Draw the image at the new origin
-              p.pop(); // Add this line to restore the original coordinate system
+        let x = 0,
+          y = 0;
+
+        while (x < p.width && y < p.height) {
+          let pathImg;
+          let offsetX = 0.01; // Adjust as needed
+          let offsetY = 0.01; // Adjust as needed
+
+          if (Math.random() < 0.1) {
+            pathImg = pathImg04;
+            p.push(); // Save current drawing settings
+            p.translate(x + tileSize / 2, y + tileSize / 2); // Set rotation center to tile center
+
+            // Apply rotation if changing from horizontal to vertical
+            if (currentDirection === "vertical") {
+              p.rotate(p.radians(180));
+            }
+            p.scale(2)
+            // p.translate(x + tileSize/2 + offsetX, y + tileSize/2 + offsetY);
+
+            p.image(
+              pathImg,
+              -tileSize / 2 ,
+              -tileSize / 2,
+              tileSize,
+              tileSize
+            ); // Draw the tile with the pivot at its center
+
+            p.pop(); // Restore previous drawing settings
+            // p.image(pathImg, x, y, tileSize, tileSize);  // Place the turning tile first
+
+            // Update direction and coordinates after placing the turning tile
+            if (currentDirection === "horizontal") {
+              y += tileSize;
+              currentDirection = "vertical";
+            } else {
+              x += tileSize;
+              currentDirection = "horizontal";
             }
           } else {
-            for (let y = 0; y < p.height; y += tileSize) {
-              p.image(tilePathImg02, pathPos, y, tileSize, tileSize);
+            pathImg = p.random(paths);
+
+            p.push(); // Save current drawing settings
+            p.translate(x + tileSize / 2, y + tileSize / 2); // Set rotation center to tile center
+
+            // Apply rotation if vertical
+            if (currentDirection === "vertical") {
+              p.rotate(p.radians(90));
+            }
+            p.scale(3)
+            p.image(pathImg, -tileSize / 2, -tileSize / 2, tileSize, tileSize); // Draw the tile with the pivot at its center
+
+            p.pop(); // Restore previous drawing settings
+
+            if (currentDirection === "horizontal") {
+              x += tileSize;
+            } else {
+              y += tileSize;
             }
           }
         }
+
+        // p.image(pathImg, x, pathPos, tileSize, tileSize);
+        // p.image(
+        //   pathImg,
+        //   -tileSize / 2,
+        //   -tileSize / 2,
+        //   tileSize,
+        //   tileSize
+        // );
 
         // Draw all boulders
         const boulders = [
