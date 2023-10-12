@@ -99,10 +99,23 @@ import boulder02 from "../assets/boulderAssets/boulder02.png";
 import boulder03 from "../assets/boulderAssets/boulder03.png";
 import boulder04 from "../assets/boulderAssets/boulder04.png";
 import boulder05 from "../assets/boulderAssets/boulder05.png";
+import boulder06 from "../assets/boulderAssets/boulder06.png";
+import boulder07 from "../assets/boulderAssets/boulder07.png";
+import boulder08 from "../assets/boulderAssets/boulder08.png";
+import boulder09 from "../assets/boulderAssets/boulder09.png";
 
 import rocks01 from "../assets/rockPilesAssets/RockPile01.png";
 import rocks02 from "../assets/rockPilesAssets/RockPile02.png";
 import rocks03 from "../assets/rockPilesAssets/RockPile03.png";
+import rocks04 from "../assets/rockPilesAssets/RockPile04.png";
+import rocks05 from "../assets/rockPilesAssets/RockPile05.png";
+import rocks06 from "../assets/rockPilesAssets/RockPile06.png";
+import rocks07 from "../assets/rockPilesAssets/RockPile07.png";
+import rocks08 from "../assets/rockPilesAssets/RockPile08.png";
+import rocks09 from "../assets/rockPilesAssets/RockPile09.png";
+import rocks10 from "../assets/rockPilesAssets/RockPile10.png";
+import rocks11 from "../assets/rockPilesAssets/RockPile11.png";
+import rocks12 from "../assets/rockPilesAssets/RockPile12.png";
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -124,11 +137,16 @@ const CanvasPainter = ({ width, height }) => {
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
   const [treeScale, setTreeScale] = useState(5);
   const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
+  const [boulderScale, setBoulderScale] = useState(3);
+  const [showRocks, setShowRocks] = useState(true); // New state for tree visibility
+  const [rocksScale, setRocksScale] = useState(3);
   const [showPath, setShowPath] = useState(true);
-  const [theme, setTheme] = useState("concreate");
+  const [theme, setTheme] = useState("grass");
   const [selectedTileIndex, setSelectedTileIndex] = useState(null);
 
   const [images, setImages] = useState({});
+
+  const [selectedAsset, setSelectedAsset] = useState(null);
 
   useEffect(() => {
     const imgUrls = [
@@ -166,10 +184,6 @@ const CanvasPainter = ({ width, height }) => {
       tree01,
       tree02,
       tree03,
-      path03,
-      path01,
-      path02,
-      path04,
     ];
 
     const imgs = {};
@@ -187,13 +201,8 @@ const CanvasPainter = ({ width, height }) => {
     setSeed(Math.random() * 1000); // Update the seed to trigger a re-render with new noise
   };
 
-  const concreateTilesImages = [];
   const dirtTilesImages = [];
   const grassTilesImages = [];
-  const gravelTilesImages = [];
-  const marbleTilesImages = [];
-  const metalTilesImages = [];
-  const mossTilesImages = [];
   const rockTilesImages = [];
   const sandTilesImages = [];
   const snowTilesImages = [];
@@ -209,30 +218,27 @@ const CanvasPainter = ({ width, height }) => {
       let boulderImg03;
       let boulderImg04;
       let boulderImg05;
+      let boulderImg06;
+      let boulderImg07;
+      let boulderImg08;
+      let boulderImg09;
 
       let rocksImg01;
       let rocksImg02;
       let rocksImg03;
-
-      let pathImg01;
-      let pathImg02;
-      let pathImg03;
-      let pathImg04;
-
-      console.log("ran");
+      let rocksImg04;
+      let rocksImg05;
+      let rocksImg06;
+      let rocksImg07;
+      let rocksImg08;
+      let rocksImg09;
+      let rocksImg10;
+      let rocksImg11;
+      let rocksImg12;
 
       //   Preload images
       p.preload = () => {
-        if (theme === "concreate") {
-          // Populate the concreate mapping object
-          concreateTilesImages[0] = p.loadImage(concreate01);
-          concreateTilesImages[1] = p.loadImage(concreate02);
-          concreateTilesImages[2] = p.loadImage(concreate03);
-          concreateTilesImages[3] = p.loadImage(concreate04);
-          concreateTilesImages[4] = p.loadImage(concreate05);
-          concreateTilesImages[5] = p.loadImage(concreate06);
-          concreateTilesImages[6] = p.loadImage(concreate07);
-        } else if (theme === "dirt") {
+        if (theme === "dirt") {
           // Populate the dirt mapping object
           dirtTilesImages[0] = p.loadImage(dirt01);
           dirtTilesImages[1] = p.loadImage(dirt02);
@@ -254,40 +260,6 @@ const CanvasPainter = ({ width, height }) => {
           grassTilesImages[6] = p.loadImage(grass07);
           grassTilesImages[7] = p.loadImage(grass08);
           grassTilesImages[8] = p.loadImage(grass09);
-        } else if (theme === "gravel") {
-          // Populate the grass mapping object
-          gravelTilesImages[0] = p.loadImage(gravel01);
-          gravelTilesImages[1] = p.loadImage(gravel02);
-          gravelTilesImages[2] = p.loadImage(gravel03);
-          gravelTilesImages[3] = p.loadImage(gravel04);
-          gravelTilesImages[4] = p.loadImage(gravel05);
-          gravelTilesImages[5] = p.loadImage(gravel06);
-        } else if (theme === "marble") {
-          // Populate the marble mapping object
-          marbleTilesImages[0] = p.loadImage(marble01);
-          marbleTilesImages[1] = p.loadImage(marble02);
-          marbleTilesImages[2] = p.loadImage(marble03);
-          marbleTilesImages[3] = p.loadImage(marble04);
-          marbleTilesImages[4] = p.loadImage(marble05);
-          marbleTilesImages[5] = p.loadImage(marble06);
-          marbleTilesImages[6] = p.loadImage(marble07);
-          marbleTilesImages[7] = p.loadImage(marble08);
-        } else if (theme === "metal") {
-          // Populate the metal mapping object
-          metalTilesImages[0] = p.loadImage(metal01);
-          metalTilesImages[1] = p.loadImage(metal02);
-          metalTilesImages[2] = p.loadImage(metal03);
-          metalTilesImages[3] = p.loadImage(metal04);
-          metalTilesImages[4] = p.loadImage(metal05);
-        } else if (theme === "moss") {
-          // Populate the moss mapping object
-          mossTilesImages[0] = p.loadImage(moss01);
-          mossTilesImages[1] = p.loadImage(moss02);
-          mossTilesImages[2] = p.loadImage(moss03);
-          mossTilesImages[3] = p.loadImage(moss04);
-          mossTilesImages[4] = p.loadImage(moss05);
-          mossTilesImages[5] = p.loadImage(moss06);
-          mossTilesImages[6] = p.loadImage(moss07);
         } else if (theme === "rock") {
           // Populate the rock mapping object
           rockTilesImages[0] = p.loadImage(rock01);
@@ -336,15 +308,23 @@ const CanvasPainter = ({ width, height }) => {
         boulderImg03 = p.loadImage(boulder03);
         boulderImg04 = p.loadImage(boulder04);
         boulderImg05 = p.loadImage(boulder05);
+        boulderImg06 = p.loadImage(boulder06);
+        boulderImg07 = p.loadImage(boulder07);
+        boulderImg08 = p.loadImage(boulder08);
+        boulderImg09 = p.loadImage(boulder09);
 
         rocksImg01 = p.loadImage(rocks01);
         rocksImg02 = p.loadImage(rocks02);
         rocksImg03 = p.loadImage(rocks03);
-
-        pathImg01 = p.loadImage(path01);
-        pathImg02 = p.loadImage(path02);
-        pathImg03 = p.loadImage(path03);
-        pathImg04 = p.loadImage(path04);
+        rocksImg04 = p.loadImage(rocks04);
+        rocksImg05 = p.loadImage(rocks05);
+        rocksImg06 = p.loadImage(rocks06);
+        rocksImg07 = p.loadImage(rocks07);
+        rocksImg08 = p.loadImage(rocks08);
+        rocksImg09 = p.loadImage(rocks09);
+        rocksImg10 = p.loadImage(rocks10);
+        rocksImg11 = p.loadImage(rocks11);
+        rocksImg12 = p.loadImage(rocks12);
       };
       //   Setup canvas
       p.setup = () => {
@@ -357,25 +337,13 @@ const CanvasPainter = ({ width, height }) => {
       const tileSize = 60;
       //   Tile size
       const imgSize = tileSize * 8;
-      //   Is the path horizonal or vertical
-      let isHorizontalPath = Math.random() > 0.5;
-      let pathPos = isHorizontalPath
-        ? Math.floor(p.random(0, height / tileSize)) * tileSize
-        : Math.floor(p.random(0, width / tileSize)) * tileSize;
 
       // Draw everything
       p.draw = () => {
         p.background(255);
 
-        // Determine the tile to use for this render
         let tile;
-        if (theme === "concreate") {
-          if (selectedTileIndex !== null) {
-            tile = concreateTilesImages[selectedTileIndex]; // Use the index to get the tile
-          } else {
-            tile = p.random(concreateTilesImages);
-          }
-        } else if (theme === "dirt") {
+        if (theme === "dirt") {
           if (selectedTileIndex !== null) {
             tile = dirtTilesImages[selectedTileIndex]; // Use the index to get the tile
           } else {
@@ -386,30 +354,6 @@ const CanvasPainter = ({ width, height }) => {
             tile = grassTilesImages[selectedTileIndex]; // Use the index to get the tile
           } else {
             tile = p.random(grassTilesImages);
-          }
-        } else if (theme === "gravel") {
-          if (selectedTileIndex !== null) {
-            tile = gravelTilesImages[selectedTileIndex]; // Use the index to get the tile
-          } else {
-            tile = p.random(gravelTilesImages);
-          }
-        } else if (theme === "marble") {
-          if (selectedTileIndex !== null) {
-            tile = marbleTilesImages[selectedTileIndex]; // Use the index to get the tile
-          } else {
-            tile = p.random(marbleTilesImages);
-          }
-        } else if (theme === "metal") {
-          if (selectedTileIndex !== null) {
-            tile = metalTilesImages[selectedTileIndex]; // Use the index to get the tile
-          } else {
-            tile = p.random(metalTilesImages);
-          }
-        } else if (theme === "moss") {
-          if (selectedTileIndex !== null) {
-            tile = mossTilesImages[selectedTileIndex]; // Use the index to get the tile
-          } else {
-            tile = p.random(mossTilesImages);
           }
         } else if (theme === "rock") {
           if (selectedTileIndex !== null) {
@@ -433,9 +377,10 @@ const CanvasPainter = ({ width, height }) => {
 
         if (!tile) {
           console.error("Tile is undefined");
-          return; // If tile is still undefined for some reason, log an error and return to avoid further errors
+          return;
         }
 
+        // Palce Tiles
         for (let y = 0; y < p.height; y += imgSize) {
           for (let x = 0; x < p.width; x += imgSize) {
             p.push();
@@ -445,109 +390,94 @@ const CanvasPainter = ({ width, height }) => {
           }
         }
 
-        const paths = [pathImg01,];
+        // Function for population mapping
+        function mapRange(value, inMin, inMax, outMin, outMax) {
+          return (
+            ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
+          );
+        }
 
-        let randomDirection = Math.floor(Math.random() * 2);
-        let currentDirection =
-          randomDirection === 1 ? "horizontal" : "vertical";
+         // Draw all boulders
+         const rocks = [
+          rocksImg01,
+          rocksImg02,
+          rocksImg03,
+          rocksImg04,
+          rocksImg05,
+          rocksImg06,
+          rocksImg07,
+          rocksImg08,
+          rocksImg09,
+          rocksImg10,
+          rocksImg11,
+          rocksImg12,
+        ];
+        const rocksPositions = [];
+        if (showRocks) {
+          for (let y = 0; y < p.height; y += tileSize) {
+            for (let x = 0; x < p.width; x += tileSize) {
+              const scaledRocksProbability = mapRange(
+                rocksScale,
+                0,
+                10,
+                0,
+                0.1
+              );
+              if (Math.random() < scaledRocksProbability) {
+                const rocksImg = p.random(rocks);
+                const minRocksScale = 0.5;
+                const maxRocksScale = 1.1;
+                const rocksScale =
+                  minRocksScale +
+                  Math.random() * (maxRocksScale - minRocksScale);
+                const rocksRotation = Math.random() * 360;
 
-        // Draw path tiles over the base tiles
-        let x = 0,
-          y = 0;
+                p.push();
+                p.translate(x + tileSize / 2, y + tileSize / 2);
+                p.scale(rocksScale);
+                p.rotate(p.radians(rocksRotation));
+                // Adding shadow
+                p.drawingContext.shadowOffsetX = 2;
+                p.drawingContext.shadowOffsetY = 2;
+                p.drawingContext.shadowBlur = 5;
+                p.drawingContext.shadowColor = "black";
+                p.image(rocksImg, -rocksImg.width / 2, -rocksImg.height / 2);
 
-        while (x < p.width && y < p.height) {
-          let pathImg;
-          let offsetX = 0.01; // Adjust as needed
-          let offsetY = 0.01; // Adjust as needed
+                rocksPositions.push({ x, y });
 
-          if (Math.random() < 0.1) {
-            pathImg = pathImg04;
-            p.push(); // Save current drawing settings
-            p.translate(x + tileSize / 2, y + tileSize / 2); // Set rotation center to tile center
-
-            // Apply rotation if changing from horizontal to vertical
-            if (currentDirection === "vertical") {
-              p.rotate(p.radians(180));
-            }
-            p.scale(2)
-            // p.translate(x + tileSize/2 + offsetX, y + tileSize/2 + offsetY);
-
-            p.image(
-              pathImg,
-              -tileSize / 2 ,
-              -tileSize / 2,
-              tileSize,
-              tileSize
-            ); // Draw the tile with the pivot at its center
-
-            p.pop(); // Restore previous drawing settings
-            // p.image(pathImg, x, y, tileSize, tileSize);  // Place the turning tile first
-
-            // Update direction and coordinates after placing the turning tile
-            if (currentDirection === "horizontal") {
-              y += tileSize;
-              currentDirection = "vertical";
-            } else {
-              x += tileSize;
-              currentDirection = "horizontal";
-            }
-          } else {
-            pathImg = p.random(paths);
-
-            p.push(); // Save current drawing settings
-            p.translate(x + tileSize / 2, y + tileSize / 2); // Set rotation center to tile center
-
-            // Apply rotation if vertical
-            if (currentDirection === "vertical") {
-              p.rotate(p.radians(90));
-            }
-            p.scale(3)
-            p.image(pathImg, -tileSize / 2, -tileSize / 2, tileSize, tileSize); // Draw the tile with the pivot at its center
-
-            p.pop(); // Restore previous drawing settings
-
-            if (currentDirection === "horizontal") {
-              x += tileSize;
-            } else {
-              y += tileSize;
+                p.pop();
+              }
             }
           }
         }
 
-        // p.image(pathImg, x, pathPos, tileSize, tileSize);
-        // p.image(
-        //   pathImg,
-        //   -tileSize / 2,
-        //   -tileSize / 2,
-        //   tileSize,
-        //   tileSize
-        // );
-
         // Draw all boulders
         const boulders = [
           boulderImg01,
-          // boulderImg02,
-          // boulderImg03,
-          // boulderImg04,
-          // boulderImg05,
-          // rocksImg01,
-          // rocksImg02,
-          // rocksImg03,
+          boulderImg02,
+          boulderImg03,
+          boulderImg04,
+          boulderImg05,
+          boulderImg06,
+          boulderImg07,
+          boulderImg08,
+          boulderImg09,
         ];
+        const boulderPositions = [];
         if (showBoulders) {
           for (let y = 0; y < p.height; y += tileSize) {
             for (let x = 0; x < p.width; x += tileSize) {
-              if (Math.random() < 0.01) {
-                if (
-                  (isHorizontalPath && y === pathPos) ||
-                  (!isHorizontalPath && x === pathPos)
-                ) {
-                  continue;
-                }
-
+              const scaledBoulderProbability = mapRange(
+                boulderScale,
+                0,
+                10,
+                0,
+                0.04
+              );
+              if (Math.random() < scaledBoulderProbability) {
                 const boulderImg = p.random(boulders);
-                const minBoulderScale = 0.01;
-                const maxBoulderScale = 0.25;
+                const minBoulderScale = 0.5;
+                const maxBoulderScale = 1.1;
                 const boulderScale =
                   minBoulderScale +
                   Math.random() * (maxBoulderScale - minBoulderScale);
@@ -555,39 +485,42 @@ const CanvasPainter = ({ width, height }) => {
 
                 p.push();
                 p.translate(x + tileSize / 2, y + tileSize / 2);
-                // p.scale(boulderScale);
+                p.scale(boulderScale);
                 p.rotate(p.radians(boulderRotation));
+                // Adding shadow
+                p.drawingContext.shadowOffsetX = 8;
+                p.drawingContext.shadowOffsetY = 8;
+                p.drawingContext.shadowBlur = 5;
+                p.drawingContext.shadowColor = "black";
                 p.image(
                   boulderImg,
                   -boulderImg.width / 2,
                   -boulderImg.height / 2
                 );
+
+                boulderPositions.push({ x, y });
+
                 p.pop();
               }
             }
           }
         }
 
-        function mapRange(value, inMin, inMax, outMin, outMax) {
-          return (
-            ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin
-          );
+       
+
+        function isPositionOccupied(x, y) {
+          return boulderPositions.some((pos) => pos.x === x && pos.y === y);
         }
         const trees = [treeImg01, treeImg02, treeImg03];
         // Draw all trees
         if (showTrees) {
           for (let y = 0; y < p.height; y += tileSize) {
             for (let x = 0; x < p.width; x += tileSize) {
+              if (isPositionOccupied(x, y)) {
+                continue; // Skip this iteration if a boulder is already at this position
+              }
               const scaledTreeProbability = mapRange(treeScale, 0, 10, 0, 0.1);
               if (Math.random() < scaledTreeProbability) {
-                // This condition checks if the tree is on the path
-                if (
-                  (isHorizontalPath && y === pathPos) ||
-                  (!isHorizontalPath && x === pathPos)
-                ) {
-                  continue; // Skip this iteration to avoid drawing tree on the path
-                }
-
                 const treeImg = p.random(trees);
                 const minTreeScale = 0.4;
                 const maxTreeScale = 0.7;
@@ -731,10 +664,10 @@ const CanvasPainter = ({ width, height }) => {
   ];
 
   const getTileOptions = () => {
-    if (theme === "concreate") {
-      return concreateTiles;
-    } else if (theme === "dirt") {
+    if (theme === "dirt") {
       return dirtTiles;
+    } else if (theme === "concreate") {
+      return concreateTiles;
     } else if (theme === "grass") {
       return grassTiles;
     } else if (theme === "gravel") {
@@ -770,13 +703,13 @@ const CanvasPainter = ({ width, height }) => {
         <label>
           Tile Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-            <option value="concreate">Concreate</option>
+            {/* <option value="concreate">Concreate</option> */}
             <option value="dirt">Dirt</option>
-            <option value="gravel">Gravel</option>
+            {/* <option value="gravel">Gravel</option> */}
             <option value="grass">Grass</option>
-            <option value="marble">Marble</option>
+            {/* <option value="marble">Marble</option>
             <option value="metal">Metal</option>
-            <option value="moss">Moss</option>
+            <option value="moss">Moss</option> */}
             <option value="rock">Rock</option>
             <option value="sand">Sand</option>
             <option value="snow">Snow</option>
@@ -825,7 +758,7 @@ const CanvasPainter = ({ width, height }) => {
               <input
                 type="range"
                 min="0"
-                max="10"
+                max="9"
                 value={treeScale}
                 onChange={(e) => setTreeScale(e.target.value)}
               />
@@ -835,19 +768,47 @@ const CanvasPainter = ({ width, height }) => {
         <label>
           <input
             type="checkbox"
-            checked={showPath}
-            onChange={(e) => setShowPath(e.target.checked)}
-          />{" "}
-          Show Path
-        </label>
-        <label>
-          <input
-            type="checkbox"
             checked={showBoulders}
             onChange={(e) => setShowBoulders(e.target.checked)}
           />{" "}
           Show Boulders
         </label>
+        {showBoulders && ( // Only show the slider when the checkbox is checked
+          <div>
+            <label>
+              Boulder Volume: {boulderScale}
+              <input
+                type="range"
+                min="0"
+                max="9"
+                value={boulderScale}
+                onChange={(e) => setBoulderScale(e.target.value)}
+              />
+            </label>
+          </div>
+        )}
+        <label>
+          <input
+            type="checkbox"
+            checked={showRocks}
+            onChange={(e) => setShowRocks(e.target.checked)}
+          />{" "}
+          Show Rocks
+        </label>
+        {showRocks && ( // Only show the slider when the checkbox is checked
+          <div>
+            <label>
+              Rocks Volume: {rocksScale}
+              <input
+                type="range"
+                min="0"
+                max="9"
+                value={rocksScale}
+                onChange={(e) => setRocksScale(e.target.value)}
+              />
+            </label>
+          </div>
+        )}
       </div>
 
       <div className="canvasContianer">
