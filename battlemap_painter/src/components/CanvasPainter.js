@@ -117,9 +117,18 @@ import rocks10 from "../assets/rockPilesAssets/RockPile10.png";
 import rocks11 from "../assets/rockPilesAssets/RockPile11.png";
 import rocks12 from "../assets/rockPilesAssets/RockPile12.png";
 
-import tree01 from "../assets/tree01.png";
-import tree02 from "../assets/tree02.png";
-import tree03 from "../assets/tree03.png";
+import tree01 from "../assets/treeAssets/tree01.png";
+import tree02 from "../assets/treeAssets/tree02.png";
+import tree03 from "../assets/treeAssets/tree03.png";
+import tree04 from "../assets/treeAssets/tree04.png";
+import tree05 from "../assets/treeAssets/tree05.png";
+import tree06 from "../assets/treeAssets/tree06.png";
+import tree07 from "../assets/treeAssets/tree07.png";
+import tree08 from "../assets/treeAssets/tree08.png";
+import tree09 from "../assets/treeAssets/tree09.png";
+import tree10 from "../assets/treeAssets/tree10.png";
+import tree11 from "../assets/treeAssets/tree11.png";
+import tree12 from "../assets/treeAssets/tree12.png";
 
 import path01 from "../assets/path01.png";
 import path02 from "../assets/path02.png";
@@ -212,6 +221,15 @@ const CanvasPainter = ({ width, height }) => {
       let treeImg01;
       let treeImg02;
       let treeImg03;
+      let treeImg04;
+      let treeImg05;
+      let treeImg06;
+      let treeImg07;
+      let treeImg08;
+      let treeImg09;
+      let treeImg10;
+      let treeImg11;
+      let treeImg12;
 
       let boulderImg01;
       let boulderImg02;
@@ -302,6 +320,15 @@ const CanvasPainter = ({ width, height }) => {
         treeImg01 = p.loadImage(tree01);
         treeImg02 = p.loadImage(tree02);
         treeImg03 = p.loadImage(tree03);
+        treeImg04 = p.loadImage(tree04);
+        treeImg05 = p.loadImage(tree05);
+        treeImg06 = p.loadImage(tree06);
+        treeImg07 = p.loadImage(tree07);
+        treeImg08 = p.loadImage(tree08);
+        treeImg09 = p.loadImage(tree09);
+        treeImg10 = p.loadImage(tree10);
+        treeImg11 = p.loadImage(tree11);
+        treeImg12 = p.loadImage(tree12);
 
         boulderImg01 = p.loadImage(boulder01);
         boulderImg02 = p.loadImage(boulder02);
@@ -476,8 +503,8 @@ const CanvasPainter = ({ width, height }) => {
               );
               if (Math.random() < scaledBoulderProbability) {
                 const boulderImg = p.random(boulders);
-                const minBoulderScale = 0.5;
-                const maxBoulderScale = 1.1;
+                const minBoulderScale = 0.3;
+                const maxBoulderScale = 0.8;
                 const boulderScale =
                   minBoulderScale +
                   Math.random() * (maxBoulderScale - minBoulderScale);
@@ -511,7 +538,20 @@ const CanvasPainter = ({ width, height }) => {
         function isPositionOccupied(x, y) {
           return boulderPositions.some((pos) => pos.x === x && pos.y === y);
         }
-        const trees = [treeImg01, treeImg02, treeImg03];
+        const trees = [
+          treeImg01,
+          treeImg02,
+          treeImg03,
+          treeImg04,
+          treeImg05,
+          treeImg06,
+          treeImg07,
+          treeImg08,
+          treeImg09,
+          treeImg10,
+          treeImg11,
+          treeImg12,
+        ];
         // Draw all trees
         if (showTrees) {
           for (let y = 0; y < p.height; y += tileSize) {
@@ -522,8 +562,8 @@ const CanvasPainter = ({ width, height }) => {
               const scaledTreeProbability = mapRange(treeScale, 0, 10, 0, 0.1);
               if (Math.random() < scaledTreeProbability) {
                 const treeImg = p.random(trees);
-                const minTreeScale = 0.4;
-                const maxTreeScale = 0.7;
+                const minTreeScale = 0.1;
+                const maxTreeScale = 0.4;
                 const treeScale =
                   minTreeScale + Math.random() * (maxTreeScale - minTreeScale);
                 const treeRotation = Math.random() * 360;
