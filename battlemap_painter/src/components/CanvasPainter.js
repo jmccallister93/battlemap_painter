@@ -6,20 +6,31 @@ import assets from "./CentralIndex";
 
 const CanvasPainter = () => {
   const canvasRef = useRef(null);
-  const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
-  const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
-  const [treeScale, setTreeScale] = useState(3);
-  const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
-  const [boulderScale, setBoulderScale] = useState(3);
-  const [showRocks, setShowRocks] = useState(true); // New state for tree visibility
-  const [rocksScale, setRocksScale] = useState(3);
-  const [showBushes, setShowBushes] = useState(true); // New state for tree visibility
-  const [bushScale, setBushScale] = useState(3);
+  const [seed, setSeed] = useState(Math.random() * 1000);
   const [theme, setTheme] = useState("grass");
   const [selectedTileIndex, setSelectedTileIndex] = useState(null);
   const [tileOptions, setTileOptions] = useState([]);
   const [width, setWidth] = useState(1080);
   const [height, setHeight] = useState(1080);
+  const [lighting, setLighting] = useState("day");
+
+  const [showRocks, setShowRocks] = useState(true);
+  const [rocksScale, setRocksScale] = useState(3);
+
+  const [showFlowers, setShowFlowers] = useState(true);
+  const [flowerScale, setFlowerScale] = useState(3);
+
+  const [showBushes, setShowBushes] = useState(true);
+  const [bushScale, setBushScale] = useState(3);
+
+  const [showBoulders, setShowBoulders] = useState(true);
+  const [boulderScale, setBoulderScale] = useState(3);
+
+  const [stumpScale, setStumpScale] = useState(1);
+  const [branchScale, setBranchScale] = useState(3);
+
+  const [showTrees, setShowTrees] = useState(true);
+  const [treeScale, setTreeScale] = useState(3);
 
   // Utility function outside of sketch to load in images
   const preloadImages = (p, assets) => {
@@ -31,8 +42,10 @@ const CanvasPainter = () => {
     setSeed(Math.random() * 1000);
   };
 
+  // Main UseEffect
   useEffect(() => {
     const sketch = (p) => {
+
       // Create tiles array
       const tilesMap = {
         dirt: assets.dirtTiles,
@@ -45,8 +58,11 @@ const CanvasPainter = () => {
 
       // Create asset arrays
       let rocksImgs = assets.rocks;
+      let flowerImgs = assets.flower;
       let bushImgs = assets.bush;
       let boulderImgs = assets.boulder;
+      let stumpImgs = assets.stump;
+      let branchImgs = assets.branch;
       let treeImgs = assets.tree;
 
       // Function for population mapping
@@ -62,8 +78,8 @@ const CanvasPainter = () => {
         maxScale,
         scale,
         positionsArray,
-        probability
-      ) => {
+        probability,
+      ) => { 
         if (show) {
           for (let y = 0; y < p.height; y += tileSize) {
             for (let x = 0; x < p.width; x += tileSize) {
@@ -91,8 +107,10 @@ const CanvasPainter = () => {
               }
             }
           }
+          
         }
       };
+
 
       //   Preload images
       p.preload = () => {
@@ -101,12 +119,17 @@ const CanvasPainter = () => {
           tilesImages = tilesMap[theme].map((tile) => p.loadImage(tile));
         }
 
+        // Preload the assets into Arrays for drwaing
         rocksImgs = preloadImages(p, assets.rocks);
+        flowerImgs = preloadImages(p, assets.flower);
         bushImgs = preloadImages(p, assets.bush);
         boulderImgs = preloadImages(p, assets.boulder);
+        branchImgs = preloadImages(p, assets.branch);
+        stumpImgs = preloadImages(p, assets.stump);
         treeImgs = preloadImages(p, assets.tree);
       };
-      //   Setup canvas
+
+      //Setup canvas
       p.setup = () => {
         p.createCanvas(width, height);
         p.noLoop();
@@ -167,7 +190,41 @@ const CanvasPainter = () => {
           1.1,
           rocksScale,
           rocksPositions,
-          0.1
+          0.1,
+        );
+        // Draw all branches
+        const branchPositions = [];
+        drawObjects(
+          showTrees,
+          branchImgs,
+          0.05,
+          0.1,
+          branchScale,
+          branchPositions,
+          0.04,
+        );
+        // Draw all stumps
+        const stumpPositions = [];
+        drawObjects(
+          showTrees,
+          stumpImgs,
+          0.05,
+          0.1,
+          stumpScale,
+          stumpPositions,
+          0.04,
+        );
+
+        // Draw Flowers
+        const flowerPositions = [];
+        drawObjects(
+          showFlowers,
+          flowerImgs,
+          0.1,
+          0.5,
+          flowerScale,
+          flowerPositions,
+          0.1,
         );
 
         // Draw Bushes
@@ -179,7 +236,7 @@ const CanvasPainter = () => {
           0.4,
           bushScale,
           bushPositions,
-          0.1
+          0.1,
         );
 
         //Draw Boulders
@@ -191,13 +248,14 @@ const CanvasPainter = () => {
           0.8,
           boulderScale,
           boulderPositions,
-          0.04
+          0.04,
         );
 
         //Determine where Boulders are
         function isPositionOccupied(x, y) {
           return boulderPositions.some((pos) => pos.x === x && pos.y === y);
         }
+
         // Draw all trees
         const treePositions = [];
         drawObjects(
@@ -207,8 +265,27 @@ const CanvasPainter = () => {
           0.4,
           treeScale,
           treePositions,
-          0.04
+          0.04,
         );
+
+        // Lighting hue
+        switch (lighting) {
+          case "night":
+            p.fill(0, 0, 128, 50); // semi-transparent blue
+            break;
+          case "dawn":
+            p.fill(255, 69, 0, 30); // semi-transparent red-orange
+            break;
+          case "fog":
+            p.fill(192, 192, 192, 60); // semi-transparent grey
+            break;
+          default:
+            p.fill(255, 255, 255, 0); // transparent white (no effect)
+            break;
+        }
+
+        p.rect(0, 0, p.width, p.height); // draw a rectangle over the entire canvas
+        
       };
     };
 
@@ -220,19 +297,64 @@ const CanvasPainter = () => {
     width,
     height,
     seed,
-    showTrees,
-    showBushes,
-    showRocks,
-    showBoulders,
+    // showTrees,
+    // showBushes,
+    // showRocks,
+    // showBoulders,
+    // showFlowers,
+    // boulderScale,
+    // bushScale,
+    // flowerScale,
+    // rocksScale,
+    // treeScale,
+    lighting,
     theme,
     selectedTileIndex,
   ]);
+
+
+// Create toggles for UI render
+  const ShowElementControl = ({
+    label,
+    isChecked,
+    onCheckedChanged,
+    volumeLabel,
+    volumeValue,
+    onVolumeChanged,
+  }) => {
+    return (
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isChecked}
+            onChange={(e) => onCheckedChanged(e.target.checked)}
+          />{" "}
+          {label}
+        </label>
+        {isChecked && (
+          <div>
+            <label>
+              {volumeLabel}: {volumeValue}
+              <input
+                type="range"
+                min="0"
+                max="9"
+                value={volumeValue}
+                onChange={(e) => onVolumeChanged(e.target.value)}
+              />
+            </label>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="canvasWrapper">
       <div className="optionsContainer">
         {/* Rerender */}
-        <button onClick={rerender}>Rerender Sketch</button>
+        <button onClick={rerender}>Generate New</button>
         {/* Height and Width */}
         <label>
           Canvas Width:
@@ -252,6 +374,19 @@ const CanvasPainter = () => {
             <option value="1280">1280px</option>
             <option value="1080">1080px</option>
             <option value="720">720px</option>
+          </select>
+        </label>
+        {/* Lighting */}
+        <label>
+          Lighting:
+          <select
+            value={lighting}
+            onChange={(e) => setLighting(e.target.value)}
+          >
+            <option value="day">Day</option>
+            <option value="night">Night</option>
+            <option value="dawn">Dawn/Dusk</option>
+            <option value="fog">Fog</option>
           </select>
         </label>
         {/* Tiles */}
@@ -293,97 +428,50 @@ const CanvasPainter = () => {
           </>
         )}
         {/* Trees */}
-        <label>
-          <input
-            type="checkbox"
-            checked={showTrees}
-            onChange={(e) => setShowTrees(e.target.checked)}
-          />{" "}
-          Show Trees
-        </label>
-        {showTrees && (
-          <div>
-            <label>
-              Tree Volume: {treeScale}
-              <input
-                type="range"
-                min="0"
-                max="9"
-                value={treeScale}
-                onChange={(e) => setTreeScale(e.target.value)}
-              />
-            </label>
-          </div>
-        )}
+        <ShowElementControl
+          label="Show Trees"
+          isChecked={showTrees}
+          onCheckedChanged={setShowTrees}
+          volumeLabel="Tree Volume"
+          volumeValue={treeScale}
+          onVolumeChanged={setTreeScale}
+        />
         {/* Bushes */}
-        <label>
-          <input
-            type="checkbox"
-            checked={showBushes}
-            onChange={(e) => setShowBushes(e.target.checked)}
-          />{" "}
-          Show Bushes
-        </label>
-        {showBushes && (
-          <div>
-            <label>
-              Tree Volume: {bushScale}
-              <input
-                type="range"
-                min="0"
-                max="9"
-                value={bushScale}
-                onChange={(e) => setBushScale(e.target.value)}
-              />
-            </label>
-          </div>
-        )}
+        <ShowElementControl
+          label="Show Bushes"
+          isChecked={showBushes}
+          onCheckedChanged={setShowBushes}
+          volumeLabel="Bush Volume"
+          volumeValue={bushScale}
+          onVolumeChanged={setBushScale}
+        />
+        {/* Flowers */}
+        <ShowElementControl
+          label="Show Flowers"
+          isChecked={showFlowers}
+          onCheckedChanged={setShowFlowers}
+          volumeLabel="Flower Volume"
+          volumeValue={flowerScale}
+          onVolumeChanged={setFlowerScale}
+        />
         {/* Boulders */}
-        <label>
-          <input
-            type="checkbox"
-            checked={showBoulders}
-            onChange={(e) => setShowBoulders(e.target.checked)}
-          />{" "}
-          Show Boulders
-        </label>
-        {showBoulders && (
-          <div>
-            <label>
-              Boulder Volume: {boulderScale}
-              <input
-                type="range"
-                min="0"
-                max="9"
-                value={boulderScale}
-                onChange={(e) => setBoulderScale(e.target.value)}
-              />
-            </label>
-          </div>
-        )}
+        <ShowElementControl
+          label="Show Boulders"
+          isChecked={showBoulders}
+          onCheckedChanged={setShowBoulders}
+          volumeLabel="Boulder Volume"
+          volumeValue={boulderScale}
+          onVolumeChanged={setBoulderScale}
+        />
         {/* Rocks */}
-        <label>
-          <input
-            type="checkbox"
-            checked={showRocks}
-            onChange={(e) => setShowRocks(e.target.checked)}
-          />{" "}
-          Show Rocks
-        </label>
-        {showRocks && (
-          <div>
-            <label>
-              Rocks Volume: {rocksScale}
-              <input
-                type="range"
-                min="0"
-                max="9"
-                value={rocksScale}
-                onChange={(e) => setRocksScale(e.target.value)}
-              />
-            </label>
-          </div>
-        )}
+        <ShowElementControl
+          label="Show Rocks"
+          isChecked={showRocks}
+          onCheckedChanged={setShowRocks}
+          volumeLabel="Rocks Volume"
+          volumeValue={rocksScale}
+          onVolumeChanged={setRocksScale}
+        />
       </div>
 
       <div className="canvasContianer">
