@@ -106,23 +106,24 @@ import dirtPath01 from "../assets/dirtPath01.png";
 import tilePath01 from "../assets/tilePath01.jpg";
 import tilePath02 from "../assets/tilePath02.jpg";
 
-interface Props {
-  width: number;
-  height: number;
-}
+// interface Props {
+//   width: number;
+//   height: number;
+// }
 
-const CanvasPainter: React.FC<Props> = ({ width, height }) => {
-  const canvasRef = useRef<any>(null);
+const CanvasPainter = ({ width, height }) => {
+  const canvasRef = useRef(null);
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
+  const [treeScale, setTreeScale] =useState(5)
   const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
   const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("concreate");
-  const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(
+  const [selectedTileIndex, setSelectedTileIndex] = useState(
     null
   );
 
-  const [images, setImages] = useState<any>({});
+  const [images, setImages] = useState({});
 
   useEffect(() => {
     const imgUrls = [
@@ -165,7 +166,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       tilePath02,
     ];
 
-    const imgs: any = {};
+    const imgs = {};
     imgUrls.forEach((url) => {
       const img = new Image();
       img.src = url;
@@ -180,16 +181,16 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     setSeed(Math.random() * 1000); // Update the seed to trigger a re-render with new noise
   };
 
-  const concreateTilesImages: p5.Image[] = [];
-  const dirtTilesImages: p5.Image[] = [];
-  const grassTilesImages: p5.Image[] = [];
-  const gravelTilesImages: p5.Image[] = [];
-  const marbleTilesImages: p5.Image[] = [];
-  const metalTilesImages: p5.Image[] = [];
-  const mossTilesImages: p5.Image[] = [];
-  const rockTilesImages: p5.Image[] = [];
-  const sandTilesImages: p5.Image[] = [];
-  const snowTilesImages: p5.Image[] = [];
+  const concreateTilesImages = [];
+  const dirtTilesImages = [];
+  const grassTilesImages = [];
+  const gravelTilesImages = [];
+  const marbleTilesImages = [];
+  const metalTilesImages = [];
+  const mossTilesImages = [];
+  const rockTilesImages = [];
+  const sandTilesImages = [];
+  const snowTilesImages = [];
 
   useEffect(() => {
     const sketch = (p: p5) => {
@@ -500,12 +501,17 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           }
         }
 
+        
+        function mapRange(value, inMin, inMax, outMin, outMax) {
+          return ((value - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
+        }
         const trees = [treeImg01, treeImg02, treeImg03];
         // Draw all trees
         if (showTrees) {
           for (let y = 0; y < p.height; y += tileSize) {
             for (let x = 0; x < p.width; x += tileSize) {
-              if (Math.random() < 0.03) {
+              const scaledTreeProbability = mapRange(treeScale, 0, 10, 0, 0.1);
+              if (Math.random() < scaledTreeProbability) {
                 // This condition checks if the tree is on the path
                 if (
                   (isHorizontalPath && y === pathPos) ||
@@ -515,8 +521,12 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
                 }
 
                 const treeImg = p.random(trees);
-                const treeScale = 0.5 + Math.random() * 1.5;
-                const treeRotation = Math.floor(Math.random() * 4) * 90;
+                const minTreeScale = 0.4;
+                const maxTreeScale = 0.7;
+                const treeScale =
+                minTreeScale +
+                  Math.random() * (maxTreeScale - minTreeScale);
+                  const treeRotation = Math.random() * 360;
 
                 p.push();
                 p.translate(x + tileSize / 2, y + tileSize / 2);
@@ -674,6 +684,8 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
     setSelectedTileIndex(null);
   }, [theme]);
 
+  
+
   return (
     <div className="canvasWrapper">
       <div className="optionsContainer">
@@ -730,6 +742,20 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           />{" "}
           Show Trees
         </label>
+        {showTrees && ( // Only show the slider when the checkbox is checked
+        <div>
+          <label>
+            Tree Volume: {treeScale} 
+            <input
+              type="range"
+              min="0"
+              max="10"
+              value={treeScale}
+              onChange={(e) => setTreeScale(e.target.value)}
+            />
+          </label>
+        </div>
+      )}
         <label>
           <input
             type="checkbox"
