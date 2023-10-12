@@ -19,7 +19,7 @@ import dirt06 from "../assets/dirtTiles/dirt06.jpg";
 import dirt07 from "../assets/dirtTiles/dirt07.jpg";
 import dirt08 from "../assets/dirtTiles/dirt08.jpg";
 
-import grass01 from "../assets/grassTiles/grass01.jpg";
+import grass01 from "../assets/grassTiles/grass09.jpg";
 import grass02 from "../assets/grassTiles/grass02.jpg";
 import grass03 from "../assets/grassTiles/grass03.jpg";
 import grass04 from "../assets/grassTiles/grass04.jpg";
@@ -88,14 +88,15 @@ import snow05 from "../assets/snowTiles/snow05.jpg";
 import snow06 from "../assets/snowTiles/snow06.jpg";
 import snow07 from "../assets/snowTiles/snow07.jpg";
 
-import boulder01 from "../assets/boulderAssets/boulder14.png";
+import boulder01 from "../assets/boulderAssets/cliff.png";
 import boulder02 from "../assets/boulderAssets/boulder02.png";
 import boulder03 from "../assets/boulderAssets/boulder03.png";
 import boulder04 from "../assets/boulderAssets/boulder04.png";
 import boulder05 from "../assets/boulderAssets/boulder05.png";
-import boulder06 from "../assets/boulderAssets/boulder06.png";
-import boulder07 from "../assets/boulderAssets/boulder07.png";
-import boulder08 from "../assets/boulderAssets/boulder08.png";
+
+import rocks01 from "../assets/rockPilesAssets/RockPile01.png"
+import rocks02 from "../assets/rockPilesAssets/RockPile02.png"
+import rocks03 from "../assets/rockPilesAssets/RockPile03.png"
 
 import tree01 from "../assets/tree01.png";
 import tree02 from "../assets/tree02.png";
@@ -201,9 +202,10 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       let boulderImg03: p5.Image;
       let boulderImg04: p5.Image;
       let boulderImg05: p5.Image;
-      let boulderImg06: p5.Image;
-      let boulderImg07: p5.Image;
-      let boulderImg08: p5.Image;
+
+      let rocksImg01: p5.Image;
+      let rocksImg02: p5.Image;
+      let rocksImg03: p5.Image;
 
       let tilePathImg01: p5.Image;
       let tilePathImg02: p5.Image;
@@ -320,9 +322,10 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
         boulderImg03 = p.loadImage(boulder03);
         boulderImg04 = p.loadImage(boulder04);
         boulderImg05 = p.loadImage(boulder05);
-        boulderImg06 = p.loadImage(boulder06);
-        boulderImg07 = p.loadImage(boulder07);
-        boulderImg08 = p.loadImage(boulder08);
+
+        rocksImg01 = p.loadImage(rocks01);
+        rocksImg02 = p.loadImage(rocks02);
+        rocksImg03 = p.loadImage(rocks03);
 
         tilePathImg01 = p.loadImage(tilePath01);
         tilePathImg02 = p.loadImage(tilePath02);
@@ -338,7 +341,7 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
       //   Map size
       const tileSize = 60;
       //   Tile size
-      const imgSize = tileSize * 4;
+      const imgSize = tileSize * 8;
       //   Is the path horizonal or vertical
       let isHorizontalPath = Math.random() > 0.5;
       let pathPos = isHorizontalPath
@@ -452,6 +455,51 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
           }
         }
 
+        // Draw all boulders
+        const boulders = [
+          boulderImg01,
+          // boulderImg02,
+          // boulderImg03,
+          // boulderImg04,
+          // boulderImg05,
+          // rocksImg01,
+          // rocksImg02,
+          // rocksImg03,
+        ];
+        if (showBoulders) {
+          for (let y = 0; y < p.height; y += tileSize) {
+            for (let x = 0; x < p.width; x += tileSize) {
+              if (Math.random() < 0.01) {
+                if (
+                  (isHorizontalPath && y === pathPos) ||
+                  (!isHorizontalPath && x === pathPos)
+                ) {
+                  continue;
+                }
+
+                const boulderImg = p.random(boulders);
+                const minBoulderScale = 0.01;
+                const maxBoulderScale = 0.25;
+                const boulderScale =
+                  minBoulderScale +
+                  Math.random() * (maxBoulderScale - minBoulderScale);
+                const boulderRotation = Math.random() * 360;
+
+                p.push();
+                p.translate(x + tileSize / 2, y + tileSize / 2);
+                // p.scale(boulderScale);
+                p.rotate(p.radians(boulderRotation));
+                p.image(
+                  boulderImg,
+                  -boulderImg.width / 2,
+                  -boulderImg.height / 2
+                );
+                p.pop();
+              }
+            }
+          }
+        }
+
         const trees = [treeImg01, treeImg02, treeImg03];
         // Draw all trees
         if (showTrees) {
@@ -475,45 +523,6 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
                 p.scale(treeScale);
                 p.rotate(p.radians(treeRotation));
                 p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);
-                p.pop();
-              }
-            }
-          }
-        }
-
-        // Draw all boulders
-        const boulders = [
-          boulderImg01,
-          boulderImg02,
-          boulderImg03,
-          boulderImg04,
-          boulderImg05,
-          boulderImg06,
-          boulderImg07,
-          boulderImg08,
-        ];
-        if (showBoulders) {
-          for (let y = 0; y < p.height; y += tileSize) {
-            for (let x = 0; x < p.width; x += tileSize) {
-              if (Math.random() < 0.01) {
-                if (
-                  (isHorizontalPath && y === pathPos) ||
-                  (!isHorizontalPath && x === pathPos)
-                ) {
-                  continue;
-                }
-
-                const boulderImg = p.random(boulders);
-                const minBoulderScale = 0.1;
-                const maxBoulderScale = 0.5;
-                const boulderScale = minBoulderScale + Math.random() * (maxBoulderScale - minBoulderScale);
-                const boulderRotation = Math.random() * 360;
-
-                p.push();
-                p.translate(x + tileSize / 2, y + tileSize / 2);
-                p.scale(boulderScale);
-                p.rotate(p.radians(boulderRotation));
-                p.image(boulderImg, -boulderImg.width / 2, -boulderImg.height / 2);
                 p.pop();
               }
             }
@@ -728,6 +737,14 @@ const CanvasPainter: React.FC<Props> = ({ width, height }) => {
             onChange={(e) => setShowPath(e.target.checked)}
           />{" "}
           Show Path
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={showBoulders}
+            onChange={(e) => setShowBoulders(e.target.checked)}
+          />{" "}
+          Show Boulders
         </label>
       </div>
 
