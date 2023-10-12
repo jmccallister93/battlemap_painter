@@ -130,25 +130,30 @@ import tree10 from "../assets/treeAssets/tree10.png";
 import tree11 from "../assets/treeAssets/tree11.png";
 import tree12 from "../assets/treeAssets/tree12.png";
 
-import path01 from "../assets/path01.png";
-import path02 from "../assets/path02.png";
-import path03 from "../assets/path03.png";
-import path04 from "../assets/path04.png";
-
-// interface Props {
-//   width: number;
-//   height: number;
-// }
+import bush01 from "../assets/bushAssets/bush01.png";
+import bush02 from "../assets/bushAssets/bush02.png";
+import bush03 from "../assets/bushAssets/bush03.png";
+import bush04 from "../assets/bushAssets/bush04.png";
+import bush05 from "../assets/bushAssets/bush05.png";
+import bush06 from "../assets/bushAssets/bush06.png";
+import bush07 from "../assets/bushAssets/bush07.png";
+import bush08 from "../assets/bushAssets/bush08.png";
+import bush09 from "../assets/bushAssets/bush09.png";
+import bush10 from "../assets/bushAssets/bush10.png";
+import bush11 from "../assets/bushAssets/bush11.png";
+import bush12 from "../assets/bushAssets/bush12.png";
 
 const CanvasPainter = ({ width, height }) => {
   const canvasRef = useRef(null);
   const [seed, setSeed] = useState(Math.random() * 1000); // Add this line
   const [showTrees, setShowTrees] = useState(true); // New state for tree visibility
-  const [treeScale, setTreeScale] = useState(5);
+  const [treeScale, setTreeScale] = useState(3);
   const [showBoulders, setShowBoulders] = useState(true); // New state for tree visibility
   const [boulderScale, setBoulderScale] = useState(3);
   const [showRocks, setShowRocks] = useState(true); // New state for tree visibility
   const [rocksScale, setRocksScale] = useState(3);
+  const [showBushes, setShowBushes] = useState(true); // New state for tree visibility
+  const [bushScale, setBushScale] = useState(3);
   const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("grass");
   const [selectedTileIndex, setSelectedTileIndex] = useState(null);
@@ -254,6 +259,19 @@ const CanvasPainter = ({ width, height }) => {
       let rocksImg11;
       let rocksImg12;
 
+      let bushImg01;
+      let bushImg02;
+      let bushImg03;
+      let bushImg04;
+      let bushImg05;
+      let bushImg06;
+      let bushImg07;
+      let bushImg08;
+      let bushImg09;
+      let bushImg10;
+      let bushImg11;
+      let bushImg12;
+
       //   Preload images
       p.preload = () => {
         if (theme === "dirt") {
@@ -352,6 +370,19 @@ const CanvasPainter = ({ width, height }) => {
         rocksImg10 = p.loadImage(rocks10);
         rocksImg11 = p.loadImage(rocks11);
         rocksImg12 = p.loadImage(rocks12);
+
+        bushImg01 = p.loadImage(bush01);
+        bushImg02 = p.loadImage(bush02);
+        bushImg03 = p.loadImage(bush03);
+        bushImg04 = p.loadImage(bush04);
+        bushImg05 = p.loadImage(bush05);
+        bushImg06 = p.loadImage(bush06);
+        bushImg07 = p.loadImage(bush07);
+        bushImg08 = p.loadImage(bush08);
+        bushImg09 = p.loadImage(bush09);
+        bushImg10 = p.loadImage(bush10);
+        bushImg11 = p.loadImage(bush11);
+        bushImg12 = p.loadImage(bush12);
       };
       //   Setup canvas
       p.setup = () => {
@@ -478,6 +509,61 @@ const CanvasPainter = ({ width, height }) => {
           }
         }
 
+
+        // Draw all bushes
+        const bushes = [
+          bushImg01,
+          bushImg02,
+          bushImg03,
+          bushImg04,
+          bushImg05,
+          bushImg06,
+          bushImg07,
+          bushImg08,
+          bushImg09,
+          bushImg10,
+          bushImg11,
+          bushImg12,
+        ];
+        const bushPositions = [];
+        if (showBushes) {
+          for (let y = 0; y < p.height; y += tileSize) {
+            for (let x = 0; x < p.width; x += tileSize) {
+              const scaledBushProbability = mapRange(
+                bushScale,
+                0,
+                10,
+                0,
+                0.1
+              );
+              if (Math.random() < scaledBushProbability) {
+                const bushImg = p.random(bushes);
+                const minBushScale = 0.05;
+                const maxBushScale = 0.4;
+                const bushScale =
+                  minBushScale +
+                  Math.random() * (maxBushScale - minBushScale);
+                const bushRotation = Math.random() * 360;
+
+                p.push();
+                p.translate(x + tileSize / 2, y + tileSize / 2);
+                p.scale(bushScale);
+                p.rotate(p.radians(bushRotation));
+                // Adding shadow
+                p.drawingContext.shadowOffsetX = 2;
+                p.drawingContext.shadowOffsetY = 2;
+                p.drawingContext.shadowBlur = 5;
+                p.drawingContext.shadowColor = "black";
+                p.image(bushImg, -bushImg.width / 2, -bushImg.height / 2);
+
+                bushPositions.push({ x, y });
+
+                p.pop();
+              }
+            }
+          }
+        }
+
         // Draw all boulders
         const boulders = [
           boulderImg01,
@@ -575,7 +661,7 @@ const CanvasPainter = ({ width, height }) => {
                 // Adding shadow
                 p.drawingContext.shadowOffsetX = 8;
                 p.drawingContext.shadowOffsetY = 8;
-                p.drawingContext.shadowBlur = 5;
+                p.drawingContext.shadowBlur = 10;
                 p.drawingContext.shadowColor = "black";
                 p.image(treeImg, -treeImg.width / 2, -treeImg.height / 2);
                 p.pop();
@@ -739,7 +825,8 @@ const CanvasPainter = ({ width, height }) => {
     <div className="canvasWrapper">
       <div className="optionsContainer">
         <button onClick={rerender}>Rerender Sketch</button>{" "}
-        {/* New dropdown for theme selection */}
+
+        {/* Tiles */}
         <label>
           Tile Theme:
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
@@ -783,6 +870,8 @@ const CanvasPainter = ({ width, height }) => {
             </label>
           </>
         )}
+
+        {/* Trees */}
         <label>
           <input
             type="checkbox"
@@ -791,7 +880,7 @@ const CanvasPainter = ({ width, height }) => {
           />{" "}
           Show Trees
         </label>
-        {showTrees && ( // Only show the slider when the checkbox is checked
+        {showTrees && ( 
           <div>
             <label>
               Tree Volume: {treeScale}
@@ -805,6 +894,32 @@ const CanvasPainter = ({ width, height }) => {
             </label>
           </div>
         )}
+
+        {/* Bushes */}
+        <label>
+          <input
+            type="checkbox"
+            checked={showBushes}
+            onChange={(e) => setShowBushes(e.target.checked)}
+          />{" "}
+          Show Bushes
+        </label>
+        {showBushes && ( 
+          <div>
+            <label>
+              Tree Volume: {bushScale}
+              <input
+                type="range"
+                min="0"
+                max="9"
+                value={bushScale}
+                onChange={(e) => setBushScale(e.target.value)}
+              />
+            </label>
+          </div>
+        )}
+
+        {/* Boulders */}
         <label>
           <input
             type="checkbox"
@@ -813,7 +928,7 @@ const CanvasPainter = ({ width, height }) => {
           />{" "}
           Show Boulders
         </label>
-        {showBoulders && ( // Only show the slider when the checkbox is checked
+        {showBoulders && ( 
           <div>
             <label>
               Boulder Volume: {boulderScale}
@@ -827,6 +942,8 @@ const CanvasPainter = ({ width, height }) => {
             </label>
           </div>
         )}
+
+        {/* Rocks */}
         <label>
           <input
             type="checkbox"
@@ -835,7 +952,7 @@ const CanvasPainter = ({ width, height }) => {
           />{" "}
           Show Rocks
         </label>
-        {showRocks && ( // Only show the slider when the checkbox is checked
+        {showRocks && ( 
           <div>
             <label>
               Rocks Volume: {rocksScale}
