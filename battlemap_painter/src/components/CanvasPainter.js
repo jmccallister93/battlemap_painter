@@ -69,46 +69,9 @@ const CanvasPainter = ({ width, height }) => {
   const [rocksScale, setRocksScale] = useState(3);
   const [showBushes, setShowBushes] = useState(true); // New state for tree visibility
   const [bushScale, setBushScale] = useState(3);
-  const [showPath, setShowPath] = useState(true);
   const [theme, setTheme] = useState("grass");
   const [selectedTileIndex, setSelectedTileIndex] = useState(null);
 
-  const [images, setImages] = useState({});
-
-  const [selectedAsset, setSelectedAsset] = useState(null);
-
-  useEffect(() => {
-    const imgUrls = [
-      dirt01,
-      dirt02,
-      dirt03,
-      dirt04,
-      dirt05,
-      dirt06,
-      dirt07,
-      dirt08,
-      grass01,
-      grass02,
-      grass03,
-      grass04,
-      grass05,
-      grass06,
-      grass07,
-      grass08,
-
-      sand01,
-    ];
-
-    const imgs = {};
-    imgUrls.forEach((url) => {
-      const img = new Image();
-      img.src = url;
-      img.onload = () => {
-        imgs[url] = img;
-        setImages({ ...images, ...imgs });
-      };
-    });
-  }, []); // This useEffect runs once when the component mounts
 
   // Utility function outside of sketch
   const preloadImages = (p, assets) => {
@@ -430,7 +393,7 @@ const CanvasPainter = ({ width, height }) => {
     return () => {
       myp5.remove(); // Ensure the p5 sketch is removed upon component unmount or re-render
     };
-  }, [width, height, seed, showTrees, showPath, theme, selectedTileIndex]);
+  }, [width, height, seed, showTrees, theme, selectedTileIndex]);
 
   const dirtTiles = [
     { label: "Dirt 01", value: dirt01 },
