@@ -11,6 +11,7 @@ import flowerAssets from "../groupAssets/flowerAssets";
 import stumpAssets from "../groupAssets/stumpAssets";
 import branchAssets from "../groupAssets/branchAssets";
 import dirtPathsAssets from "../groupAssets/dirtPathAssets";
+import cliffAssets from "../groupAssets/cliffAssets";
 
 const assets = {
     // Tiles
@@ -22,6 +23,7 @@ const assets = {
 
     // Assets
     dirtPaths: dirtPathsAssets,
+    cliff: cliffAssets,
     rocks: rocksAssets,
     flower: flowerAssets,
     bush: bushAssets,
