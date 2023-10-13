@@ -384,11 +384,12 @@ const CanvasPainter = () => {
     onVolumeChanged,
   }) => {
     return (
-      <div>
-        <label>
-          <input
+      <div className="optionWrapper">
+        <label className="optionLabel">
+          <input 
             type="checkbox"
             checked={isChecked}
+            cursor="pointer"
             onChange={(e) => onCheckedChanged(e.target.checked)}
           />{" "}
           {label}
@@ -415,91 +416,105 @@ const CanvasPainter = () => {
     <div className="canvasWrapper">
       <div className="optionsContainer">
         {/* Rerender */}
-        <button onClick={rerender}>Generate New</button>
+        <button className="generateButton" onClick={rerender}>Generate</button>
         {/* Height and Width */}
-        <label>
-          Canvas Width:
-          <select value={width} onChange={(e) => setWidth(e.target.value)}>
-            <option value="1920">1920px</option>
-            <option value="1440">1440px</option>
-            <option value="1280">1280px</option>
-            <option value="1080">1080px</option>
-            <option value="720">720px</option>
-          </select>
-        </label>
-        <label>
-          Canvas Height:
-          <select value={height} onChange={(e) => setHeight(e.target.value)}>
-            <option value="1920">1920px</option>
-            <option value="1440">1440px</option>
-            <option value="1280">1280px</option>
-            <option value="1080">1080px</option>
-            <option value="720">720px</option>
-          </select>
-        </label>
+        <div className="optionWrapper">
+          <label className="optionLabel">
+            Canvas Width:
+            <select value={width} onChange={(e) => setWidth(e.target.value)}>
+              <option value="1920">1920px</option>
+              <option value="1440">1440px</option>
+              <option value="1280">1280px</option>
+              <option value="1080">1080px</option>
+              <option value="720">720px</option>
+            </select>
+          </label>
+        </div>
+        <div className="optionWrapper">
+          <label className="optionLabel">
+            Canvas Height:
+            <select value={height} onChange={(e) => setHeight(e.target.value)}>
+              <option value="1920">1920px</option>
+              <option value="1440">1440px</option>
+              <option value="1280">1280px</option>
+              <option value="1080">1080px</option>
+              <option value="720">720px</option>
+            </select>
+          </label>
+        </div>
         {/* Lighting */}
-        <label>
-          Lighting:
-          <select
-            value={lighting}
-            onChange={(e) => setLighting(e.target.value)}
-          >
-            <option value="day">Day</option>
-            <option value="night">Night</option>
-            <option value="dawn">Dawn/Dusk</option>
-            <option value="overcast">Overcast</option>
-          </select>
-        </label>
+        <div className="optionWrapper">
+          <label className="optionLabel">
+            Lighting:
+            <select
+              value={lighting}
+              onChange={(e) => setLighting(e.target.value)}
+            >
+              <option value="day">Day</option>
+              <option value="night">Night</option>
+              <option value="dawn">Dawn/Dusk</option>
+              <option value="overcast">Overcast</option>
+            </select>
+          </label>
+        </div>
         {/* Effects */}
-        <label>
-          Effects:
-          <select value={effects} onChange={(e) => setEffects(e.target.value)}>
-            <option value="none">None</option>
-            <option value="fog">Fog</option>
-            <option value="rain">Rain</option>
-          </select>
-        </label>
+        <div className="optionWrapper">
+          <label className="optionLabel">
+            Effects:
+            <select
+              value={effects}
+              onChange={(e) => setEffects(e.target.value)}
+            >
+              <option value="none">None</option>
+              <option value="fog">Fog</option>
+              <option value="rain">Rain</option>
+            </select>
+          </label>
+        </div>
         {/* Tiles */}
-        <label>
-          Tile Theme:
-          <select value={theme} onChange={(e) => setTheme(e.target.value)}>
-            <option value="dirt">Dirt</option>
-            <option value="grass">Grass</option>
-            <option value="rock">Rock</option>
-            <option value="sand">Sand</option>
-            <option value="snow">Snow</option>
-          </select>
-        </label>
-        {tileOptions.length > 0 && (
-          <>
-            <label>
-              Tile Type:
-              <select
-                value={selectedTileIndex !== null ? selectedTileIndex : ""}
-                onChange={(e) =>
-                  setSelectedTileIndex(
-                    e.target.value ? parseInt(e.target.value) : null
-                  )
-                }
-              >
-                <option value="">Random</option>
-                {tileOptions.map(
-                  (
-                    option,
-                    index // Updated to use tileOptions state
-                  ) => (
-                    <option key={option.value} value={index}>
-                      {option.label}
-                    </option>
-                  )
-                )}
-              </select>
-            </label>
-          </>
-        )}
+        <div className="optionWrapper">
+          <label className="optionLabel">
+            Tile Theme:
+            <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+              <option value="dirt">Dirt</option>
+              <option value="grass">Grass</option>
+              <option value="rock">Rock</option>
+              <option value="sand">Sand</option>
+              <option value="snow">Snow</option>
+            </select>
+          </label>
+          </div>
+          {tileOptions.length > 0 && (
+            <div className="optionWrapper">
+              <label className="optionLabel">
+                Tile Type:
+                <select
+                  value={selectedTileIndex !== null ? selectedTileIndex : ""}
+                  onChange={(e) =>
+                    setSelectedTileIndex(
+                      e.target.value ? parseInt(e.target.value) : null
+                    )
+                  }
+                >
+                  <option value="">Random</option>
+                  {tileOptions.map(
+                    (
+                      option,
+                      index // Updated to use tileOptions state
+                    ) => (
+                      <option key={option.value} value={index}>
+                        {option.label}
+                      </option>
+                    )
+                  )}
+                </select>
+              </label>
+            </div>
+          )}
+        
         {/* Dirt Paths */}
-        <div>
-          <label>
+        <div className="optionWrapper">
+          <label className="optionLabel">
             <input
               type="checkbox"
               checked={showDirtPaths}

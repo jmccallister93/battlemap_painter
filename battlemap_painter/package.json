@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
-    "@types/p5": "^1.7.0"
+    "@types/p5": "^1.7.0",
+    "sass": "^1.69.3"
   }
 }
